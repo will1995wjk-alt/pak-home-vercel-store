@@ -1,1 +1,0 @@
-# pak-home-vercel-store
