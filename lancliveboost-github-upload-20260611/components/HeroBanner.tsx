@@ -1,6 +1,6 @@
-import Image from "next/image";
 import Link from "next/link";
 import WhatsAppButton from "./WhatsAppButton";
+import HeroSlideshow from "./HeroSlideshow";
 import { ArrowIcon, CodIcon, ShieldIcon, TruckIcon } from "./Icons";
 
 const highlights = [
@@ -42,16 +42,7 @@ export default function HeroBanner() {
           </div>
         </div>
         <div className="relative">
-          <div className="overflow-hidden rounded-xl border border-white/10 shadow-lift">
-            <Image
-              src="/images/hero-home.png"
-              alt="Home appliances and daily essentials arranged in a modern Pakistani home"
-              width={1200}
-              height={900}
-              priority
-              className="aspect-[4/3] w-full object-cover"
-            />
-          </div>
+          <HeroSlideshow />
           <div className="absolute -bottom-4 left-4 right-4 flex items-center justify-between gap-3 rounded-xl bg-white p-4 text-ink shadow-lift md:left-6 md:right-auto md:w-72">
             <div>
               <p className="text-xs font-bold uppercase tracking-wide text-brand">Easy Returns</p>
