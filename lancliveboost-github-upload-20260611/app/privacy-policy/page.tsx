@@ -1,3 +1,4 @@
+import PageHero from "@/components/PageHero";
 import { pages } from "@/data/policies";
 import { createMetadata } from "@/lib/seo";
 
@@ -5,9 +6,15 @@ export const metadata = createMetadata({ title: pages.privacy.title, path: "/pri
 
 export default function PrivacyPolicyPage() {
   return (
-    <div className="container max-w-3xl py-10">
-      <h1 className="text-4xl font-black">{pages.privacy.title}</h1>
-      <div className="mt-6 grid gap-4 text-lg leading-8 text-muted">{pages.privacy.body.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}</div>
-    </div>
+    <>
+      <PageHero title={pages.privacy.title} subtitle="How we handle and protect your information." />
+      <section className="section-pad">
+        <div className="container max-w-3xl grid gap-4 text-lg leading-relaxed text-muted">
+          {pages.privacy.body.map((paragraph) => (
+            <p key={paragraph}>{paragraph}</p>
+          ))}
+        </div>
+      </section>
+    </>
   );
 }

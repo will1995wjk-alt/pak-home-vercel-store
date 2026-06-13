@@ -1,17 +1,29 @@
+import PageHero from "@/components/PageHero";
+import TrustBadges from "@/components/TrustBadges";
+import WhatsAppCTA from "@/components/WhatsAppCTA";
 import { pages } from "@/data/policies";
 import { createMetadata } from "@/lib/seo";
 
 export const metadata = createMetadata({ title: pages.about.title, path: "/about" });
 
 export default function AboutPage() {
-  return <PolicyPage title={pages.about.title} body={pages.about.body} />;
-}
-
-function PolicyPage({ title, body }: { title: string; body: string[] }) {
   return (
-    <div className="container max-w-3xl py-10">
-      <h1 className="text-4xl font-black">{title}</h1>
-      <div className="mt-6 grid gap-4 text-lg leading-8 text-muted">{body.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}</div>
-    </div>
+    <>
+      <PageHero
+        title="About Pak Home Essentials"
+        subtitle="A Pakistan-based online store making everyday home shopping simple, affordable, and trustworthy."
+      />
+      <section className="section-pad">
+        <div className="container max-w-3xl">
+          <div className="grid gap-4 text-lg leading-relaxed text-muted">
+            {pages.about.body.map((paragraph) => (
+              <p key={paragraph}>{paragraph}</p>
+            ))}
+          </div>
+        </div>
+      </section>
+      <TrustBadges />
+      <WhatsAppCTA />
+    </>
   );
 }
