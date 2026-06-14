@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import Script from "next/script";
+import { Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import AnnouncementBar from "@/components/AnnouncementBar";
 import Footer from "@/components/Footer";
@@ -9,11 +10,13 @@ import WhatsAppFloatingButton from "@/components/WhatsAppFloatingButton";
 import { siteConfig } from "@/lib/config";
 import { createMetadata } from "@/lib/seo";
 
+const jakarta = Plus_Jakarta_Sans({ subsets: ["latin"], variable: "--font-sans", display: "swap" });
+
 export const metadata: Metadata = createMetadata({});
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" className={`${jakarta.variable} bg-paper`}>
       <body>
         {siteConfig.gaId ? (
           <>

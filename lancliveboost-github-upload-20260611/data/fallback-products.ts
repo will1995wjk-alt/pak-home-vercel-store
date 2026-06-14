@@ -1,10 +1,10 @@
 import type { Product } from "@/lib/shopify/types";
 
 const fallbackImages = {
-  kettle: "https://placehold.co/900x900?text=Electric+Kettle",
-  blender: "https://placehold.co/900x900?text=Blender",
-  mop: "https://placehold.co/900x900?text=Mop+Set",
-  storage: "https://placehold.co/900x900?text=Storage+Box"
+  kettle: "/images/product-kettle.png",
+  blender: "/images/product-blender.png",
+  mop: "/images/product-mop.png",
+  storage: "/images/product-storage.png"
 };
 
 function fallbackProduct(title: string, handle: string, type: string, price: string, compareAt: string, image: string): Product {
