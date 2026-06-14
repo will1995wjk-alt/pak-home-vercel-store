@@ -1,11 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
 import { siteConfig } from "@/lib/config";
 import SearchBar from "./SearchBar";
 import WhatsAppButton from "./WhatsAppButton";
-import { CartIcon, CloseIcon, MenuIcon } from "./Icons";
+import { CartIcon } from "./Icons";
 
 const links = [
   { href: "/", label: "Home" },
@@ -16,11 +15,9 @@ const links = [
 ];
 
 export default function Header() {
-  const [open, setOpen] = useState(false);
-
   return (
     <header className="sticky top-0 z-40 border-b border-line bg-white/95 backdrop-blur">
-      <div className="container flex min-h-16 items-center gap-4 py-2">
+      <div className="container flex min-h-16 items-center gap-3 py-2 sm:gap-4">
         <Link href="/" className="flex items-center gap-2 text-lg font-black">
           <span className="grid h-9 w-9 place-items-center rounded-lg bg-brand text-white">PH</span>
           <span className="hidden sm:inline">{siteConfig.name}</span>
@@ -30,57 +27,31 @@ export default function Header() {
           <SearchBar />
         </div>
 
-        <nav className="ml-auto hidden items-center gap-1 lg:flex">
-          {links.map((link) => (
-            <Link key={link.href} className="rounded-lg px-3 py-2 font-bold text-ink hover:bg-paper hover:text-brand" href={link.href}>
-              {link.label}
-            </Link>
-          ))}
-        </nav>
-
         <Link className="button button-secondary gap-2" href="/cart" aria-label="Cart">
           <CartIcon className="h-5 w-5" />
           <span className="hidden sm:inline">Cart</span>
         </Link>
 
-        <div className="hidden sm:block">
-          <WhatsAppButton label="WhatsApp" />
-        </div>
-
-        <button
-          className="button button-secondary px-3 lg:hidden"
-          type="button"
-          onClick={() => setOpen((value) => !value)}
-          aria-expanded={open}
-          aria-label="Toggle menu"
-        >
-          {open ? <CloseIcon className="h-5 w-5" /> : <MenuIcon className="h-5 w-5" />}
-        </button>
+        <WhatsAppButton label="WhatsApp" />
       </div>
 
       <div className="container pb-3 md:hidden">
         <SearchBar />
       </div>
 
-      {open ? (
-        <div className="border-t border-line bg-white lg:hidden">
-          <nav className="container grid gap-1 py-4">
-            {links.map((link) => (
-              <Link
-                key={link.href}
-                className="rounded-lg px-3 py-2.5 font-bold hover:bg-paper hover:text-brand"
-                href={link.href}
-                onClick={() => setOpen(false)}
-              >
-                {link.label}
-              </Link>
-            ))}
-            <div className="mt-2">
-              <WhatsAppButton label="Order on WhatsApp" className="button button-whatsapp w-full" />
-            </div>
-          </nav>
+      <nav className="border-t border-line bg-white">
+        <div className="container flex items-center gap-1 overflow-x-auto py-1.5 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          {links.map((link) => (
+            <Link
+              key={link.href}
+              className="whitespace-nowrap rounded-lg px-3 py-2 text-sm font-bold text-ink hover:bg-paper hover:text-brand"
+              href={link.href}
+            >
+              {link.label}
+            </Link>
+          ))}
         </div>
-      ) : null}
+      </nav>
     </header>
   );
 }
