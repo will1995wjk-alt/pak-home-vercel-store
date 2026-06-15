@@ -1,0 +1,16 @@
+.DS_Store
+.env
+.env.local
+.env.*.local
+node_modules/
+.next/
+out/
+dist/
+coverage/
+.vercel/
+*.log
+*.zip
+
+# Local/export duplicates kept outside the deployable Next.js source.
+pak-home-shopify-theme/
+pak-home-vercel-store/
