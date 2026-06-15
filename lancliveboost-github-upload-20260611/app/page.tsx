@@ -1,4 +1,5 @@
 import DealSection from "@/components/DealSection";
+import CustomerSurvey from "@/components/CustomerSurvey";
 import FeaturedCategories from "@/components/FeaturedCategories";
 import FeaturedProducts from "@/components/FeaturedProducts";
 import HeroBanner from "@/components/HeroBanner";
@@ -10,6 +11,7 @@ export default function HomePage() {
   return (
     <>
       <HeroBanner />
+      <CustomerSurvey />
       <TrustBadges />
       <FeaturedCategories />
       <FeaturedProducts />
