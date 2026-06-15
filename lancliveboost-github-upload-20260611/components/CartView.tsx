@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useEffect, useState, useTransition } from "react";
 import { getCartAction, removeFromCartAction, updateCartAction } from "@/app/actions";
 import type { Cart } from "@/lib/shopify/types";
@@ -34,7 +35,25 @@ export default function CartView() {
 
   if (pending && !cart) return <div className="card p-8 text-muted">Loading cart...</div>;
   if (error) return <div className="card p-8 text-muted">{error}</div>;
-  if (!cartId || !cart || !cart.lines.length) return <div className="card p-8 text-muted">Your cart is empty.</div>;
+  if (!cartId || !cart || !cart.lines.length) {
+    return (
+      <div className="card grid gap-5 p-8">
+        <div>
+          <h2 className="text-2xl font-black">Your cart is empty.</h2>
+          <p className="mt-2 max-w-xl text-muted">
+            Browse products for your home, or message us on WhatsApp if you want help choosing a
+            kitchen, cleaning, personal care, daily use, or storage item.
+          </p>
+        </div>
+        <div className="flex flex-wrap gap-3">
+          <Link className="button button-primary" href="/collections">
+            Browse products
+          </Link>
+          <WhatsAppButton label="Ask for recommendations" message="Hi, I need help choosing home products. Please guide me." />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="grid gap-6">

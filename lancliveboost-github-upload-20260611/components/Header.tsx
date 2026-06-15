@@ -9,6 +9,7 @@ import { CartIcon } from "./Icons";
 const links = [
   { href: "/", label: "Home" },
   { href: "/collections", label: "Collections" },
+  { href: "/#customer-survey", label: "Survey" },
   { href: "/search", label: "Search" },
   { href: "/about", label: "About" },
   { href: "/contact", label: "Contact" }

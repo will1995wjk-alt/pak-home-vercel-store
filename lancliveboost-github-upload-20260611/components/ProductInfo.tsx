@@ -6,7 +6,7 @@ import { formatMoney } from "@/lib/shopify/utils";
 import AddToCartButton from "./AddToCartButton";
 import WhatsAppButton from "./WhatsAppButton";
 
-export default function ProductInfo({ product }: { product: Product }) {
+export default function ProductInfo({ product, isFallback = false }: { product: Product; isFallback?: boolean }) {
   const [variantId, setVariantId] = useState(product.variants[0]?.id || "");
   const [quantity, setQuantity] = useState(1);
   const variant = useMemo<ProductVariant | undefined>(() => product.variants.find((item) => item.id === variantId), [product.variants, variantId]);
@@ -26,7 +26,7 @@ export default function ProductInfo({ product }: { product: Product }) {
 
       <div className="grid gap-2 text-sm text-muted">
         {variant?.sku ? <p>SKU: {variant.sku}</p> : null}
-        <p>{variant?.availableForSale ? "In stock" : "Out of stock"}</p>
+        <p>{isFallback ? "Demo product - order by WhatsApp" : variant?.availableForSale ? "In stock" : "Out of stock"}</p>
       </div>
 
       {product.variants.length > 1 ? (
@@ -48,17 +48,26 @@ export default function ProductInfo({ product }: { product: Product }) {
       </label>
 
       <div className="grid gap-3 sm:grid-cols-3">
-        <AddToCartButton merchandiseId={variantId} quantity={quantity} disabled={!variant?.availableForSale} />
+        <AddToCartButton merchandiseId={variantId} quantity={quantity} disabled={isFallback || !variant?.availableForSale} />
         <a className="button button-primary" href="/cart">
           Checkout
         </a>
         <WhatsAppButton product={{ title: product.title, handle: product.handle, price: variant?.price || product.priceRange.minVariantPrice }} />
       </div>
 
-      <div className="grid gap-3">
-        <div className="card p-4">Cash on Delivery available across Pakistan.</div>
-        <div className="card p-4">Fast delivery in major cities and nationwide shipping.</div>
-        <div className="card p-4">Easy return for damaged or wrong items after delivery.</div>
+      <div className="grid gap-3 sm:grid-cols-3">
+        <div className="card p-4">
+          <strong className="block text-ink">Cash on Delivery</strong>
+          <span className="mt-1 block text-sm text-muted">Pay after the parcel reaches your door.</span>
+        </div>
+        <div className="card p-4">
+          <strong className="block text-ink">Fast Dispatch</strong>
+          <span className="mt-1 block text-sm text-muted">Major city orders are packed quickly after confirmation.</span>
+        </div>
+        <div className="card p-4">
+          <strong className="block text-ink">WhatsApp Support</strong>
+          <span className="mt-1 block text-sm text-muted">Ask for product details, bundles, or bulk pricing.</span>
+        </div>
       </div>
 
       <div className="prose max-w-none" dangerouslySetInnerHTML={{ __html: product.descriptionHtml || product.description }} />

@@ -1,4 +1,5 @@
 import ProductGrid from "@/components/ProductGrid";
+import { emptyPageInfo, searchFallbackProducts } from "@/lib/fallback-catalog";
 import { searchProducts } from "@/lib/shopify/client";
 import { createMetadata } from "@/lib/seo";
 
@@ -11,7 +12,12 @@ type Props = {
 export default async function SearchPage({ searchParams }: Props) {
   const { q = "", after } = await searchParams;
   const query = q.trim();
-  const result = query ? await searchProducts(query, { after }).catch(() => null) : null;
+  const shopifyResult = query ? await searchProducts(query, { after }).catch(() => null) : null;
+  const fallbackProducts = query ? searchFallbackProducts(query) : searchFallbackProducts("");
+  const result = shopifyResult || {
+    products: fallbackProducts,
+    pageInfo: emptyPageInfo
+  };
 
   return (
     <div className="container py-10">
@@ -24,23 +30,26 @@ export default async function SearchPage({ searchParams }: Props) {
       </form>
       <div className="mt-8">
         {query ? (
-          result ? (
-            <>
-              <p className="mb-4 text-muted">Results for "{query}"</p>
-              <ProductGrid products={result.products} />
-              {result.pageInfo.hasNextPage && result.pageInfo.endCursor ? (
-                <div className="mt-8 text-center">
-                  <a className="button button-secondary" href={`/search?q=${encodeURIComponent(query)}&after=${encodeURIComponent(result.pageInfo.endCursor)}`}>
-                    Load more
-                  </a>
-                </div>
-              ) : null}
-            </>
-          ) : (
-            <div className="card p-8 text-muted">Connect Shopify API settings to search products.</div>
-          )
+          <>
+            <p className="mb-4 text-muted">
+              Results for &quot;{query}&quot;{shopifyResult ? "" : " from sample products"}
+            </p>
+            <ProductGrid products={result.products} />
+            {result.pageInfo.hasNextPage && result.pageInfo.endCursor ? (
+              <div className="mt-8 text-center">
+                <a className="button button-secondary" href={`/search?q=${encodeURIComponent(query)}&after=${encodeURIComponent(result.pageInfo.endCursor)}`}>
+                  Load more
+                </a>
+              </div>
+            ) : null}
+          </>
         ) : (
-          <div className="card p-8 text-muted">Type a product name to search.</div>
+          <>
+            <div className="card p-6 text-muted">Type a product name to search, or browse popular sample products below.</div>
+            <div className="mt-6">
+              <ProductGrid products={result.products} />
+            </div>
+          </>
         )}
       </div>
     </div>

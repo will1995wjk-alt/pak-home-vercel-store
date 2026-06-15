@@ -16,6 +16,7 @@ export function createMetadata({ title, description, path = "/", image }: SeoInp
   const url = new URL(path, siteConfig.url).toString();
 
   return {
+    metadataBase: new URL(siteConfig.url),
     title: pageTitle,
     description: pageDescription,
     alternates: { canonical: url },
