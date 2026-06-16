@@ -1,10 +1,23 @@
+const defaultContact = {
+  whatsappNumber: "923199815828",
+  supportPhone: "+923199815828",
+  supportEmail: "will1995wjk@gmail.com"
+};
+
+function contactValue(value: string | undefined, fallback: string) {
+  if (!value) return fallback;
+  const normalized = value.trim();
+  const placeholderPattern = /x{3,}|example\.com|your-/i;
+  return placeholderPattern.test(normalized) ? fallback : normalized;
+}
+
 export const siteConfig = {
   name: process.env.NEXT_PUBLIC_SITE_NAME || "Pak Home Essentials",
   url: process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000",
-  whatsappNumber: process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "",
+  whatsappNumber: contactValue(process.env.NEXT_PUBLIC_WHATSAPP_NUMBER, defaultContact.whatsappNumber),
   shopifyStoreUrl: process.env.NEXT_PUBLIC_SHOPIFY_STORE_URL || "",
-  supportEmail: process.env.NEXT_PUBLIC_SUPPORT_EMAIL || "",
-  supportPhone: process.env.NEXT_PUBLIC_SUPPORT_PHONE || "",
+  supportEmail: contactValue(process.env.NEXT_PUBLIC_SUPPORT_EMAIL, defaultContact.supportEmail),
+  supportPhone: contactValue(process.env.NEXT_PUBLIC_SUPPORT_PHONE, defaultContact.supportPhone),
   facebookUrl: process.env.NEXT_PUBLIC_FACEBOOK_URL || "",
   instagramUrl: process.env.NEXT_PUBLIC_INSTAGRAM_URL || "",
   tiktokUrl: process.env.NEXT_PUBLIC_TIKTOK_URL || "",

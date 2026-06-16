@@ -89,7 +89,7 @@ export default function Footer() {
                 className="flex items-center gap-2 hover:text-white"
               >
                 <WhatsAppIcon className="h-5 w-5 text-brand" />
-                WhatsApp
+                {siteConfig.supportPhone}
               </a>
             ) : null}
             {siteConfig.supportPhone ? (
