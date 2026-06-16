@@ -87,10 +87,10 @@ export default function CustomerSurvey() {
   return (
     <section id="customer-survey" className="section-pad bg-paper">
       <div className="container">
-        <div className="grid gap-8 rounded-2xl border border-brand/35 bg-white p-5 shadow-lift md:grid-cols-[0.85fr_1.15fr] md:p-8">
-          <div className="flex flex-col justify-between gap-8 rounded-xl bg-navy p-6 text-white md:p-8">
+        <div className="grid gap-8 rounded-2xl border border-brand/20 bg-white p-5 shadow-lift md:grid-cols-[0.85fr_1.15fr] md:p-8">
+          <div className="flex flex-col justify-between gap-8 rounded-xl bg-brand p-6 text-white md:p-8">
             <div>
-              <span className="inline-flex rounded-full bg-brand px-4 py-2 text-sm font-black uppercase tracking-wide text-navy">
+              <span className="inline-flex rounded-full bg-white px-4 py-2 text-sm font-black uppercase tracking-wide text-brand-dark">
                 Customer Survey
               </span>
               <h2 className="mt-5 text-3xl font-black leading-tight md:text-4xl">
