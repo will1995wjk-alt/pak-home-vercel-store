@@ -12,7 +12,12 @@ type Props = {
 export default function ProductCard({ product }: Props) {
   const image = product.featuredImage || product.images[0];
   const firstVariant = product.variants[0];
-  const canAddToCart = Boolean(firstVariant?.id?.startsWith("gid://shopify/")) && product.availableForSale;
+  const hasShopifyVariant = Boolean(firstVariant?.id?.startsWith("gid://shopify/"));
+  const unavailableReason = !hasShopifyVariant
+    ? "Shopify checkout is not connected yet."
+    : !product.availableForSale || !firstVariant?.availableForSale
+      ? "This product is out of stock."
+      : "";
   const price = getProductPrice(product);
   const compareAt = getCompareAtPrice(product);
   const discounted = isDiscounted(product);
@@ -50,7 +55,7 @@ export default function ProductCard({ product }: Props) {
           </div>
         </div>
         <div className="grid gap-2">
-          <AddToCartButton merchandiseId={firstVariant?.id || ""} disabled={!canAddToCart} />
+          <AddToCartButton merchandiseId={firstVariant?.id || ""} unavailableReason={unavailableReason} />
           <WhatsAppButton product={{ title: product.title, handle: product.handle, price }} />
         </div>
       </div>

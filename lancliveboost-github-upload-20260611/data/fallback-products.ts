@@ -34,6 +34,7 @@ function fallbackProduct(
     availableForSale: false,
     totalInventory: null,
     tags: [type, "Pakistan", "COD", ...tags],
+    collections: [],
     featuredImage: {
       url: image,
       altText: title,

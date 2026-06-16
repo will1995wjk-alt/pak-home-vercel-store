@@ -10,6 +10,12 @@ export default function ProductInfo({ product, isFallback = false }: { product: 
   const [variantId, setVariantId] = useState(product.variants[0]?.id || "");
   const [quantity, setQuantity] = useState(1);
   const variant = useMemo<ProductVariant | undefined>(() => product.variants.find((item) => item.id === variantId), [product.variants, variantId]);
+  const hasShopifyVariant = Boolean(variant?.id?.startsWith("gid://shopify/"));
+  const unavailableReason = !hasShopifyVariant
+    ? "Shopify checkout is not connected yet."
+    : !variant?.availableForSale
+      ? "This product is out of stock."
+      : "";
 
   return (
     <div className="grid content-start gap-5">
@@ -48,7 +54,7 @@ export default function ProductInfo({ product, isFallback = false }: { product: 
       </label>
 
       <div className="grid gap-3 sm:grid-cols-3">
-        <AddToCartButton merchandiseId={variantId} quantity={quantity} disabled={isFallback || !variant?.availableForSale} />
+        <AddToCartButton merchandiseId={variantId} quantity={quantity} unavailableReason={unavailableReason} />
         <a className="button button-primary" href="/cart">
           Checkout
         </a>

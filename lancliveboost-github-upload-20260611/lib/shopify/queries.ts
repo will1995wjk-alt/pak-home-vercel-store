@@ -34,6 +34,13 @@ const PRODUCT_FRAGMENT = `#graphql
         name
       }
     }
+    collections(first: 10) {
+      nodes {
+        id
+        handle
+        title
+      }
+    }
     priceRange {
       minVariantPrice {
         amount
@@ -104,7 +111,7 @@ export const PRODUCT_BY_HANDLE_QUERY = `#graphql
   query ProductByHandle($handle: String!) {
     productByHandle: product(handle: $handle) {
       ...ProductFields
-      collections(first: 1) {
+      relatedCollection: collections(first: 1) {
         nodes {
           handle
           products(first: 8) {

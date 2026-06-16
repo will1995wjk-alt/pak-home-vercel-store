@@ -7,16 +7,22 @@ type Props = {
   merchandiseId: string;
   quantity?: number;
   disabled?: boolean;
+  unavailableReason?: string;
   label?: string;
 };
 
 const CART_ID_KEY = "pak_home_cart_id";
 
-export default function AddToCartButton({ merchandiseId, quantity = 1, disabled, label = "Add to Cart" }: Props) {
+export default function AddToCartButton({ merchandiseId, quantity = 1, disabled, unavailableReason, label = "Add to Cart" }: Props) {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
 
   async function handleClick() {
+    if (unavailableReason) {
+      setMessage(unavailableReason);
+      return;
+    }
+
     setLoading(true);
     setMessage("");
     try {

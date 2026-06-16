@@ -12,7 +12,7 @@ export const siteConfig = {
 };
 
 export function getShopifyConfig() {
-  const domain = process.env.SHOPIFY_STORE_DOMAIN;
+  const domain = process.env.SHOPIFY_STORE_DOMAIN?.replace(/^https?:\/\//, "").replace(/\/$/, "");
   const token = process.env.SHOPIFY_STOREFRONT_ACCESS_TOKEN;
 
   if (!domain || !token) {

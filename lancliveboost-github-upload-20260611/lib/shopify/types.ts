@@ -42,6 +42,7 @@ export type Product = {
   images: ShopifyImage[];
   options: ProductOption[];
   variants: ProductVariant[];
+  collections?: Pick<Collection, "id" | "handle" | "title">[];
   priceRange: { minVariantPrice: Money; maxVariantPrice: Money };
   compareAtPriceRange: { minVariantPrice: Money; maxVariantPrice: Money };
   seo?: { title?: string | null; description?: string | null };

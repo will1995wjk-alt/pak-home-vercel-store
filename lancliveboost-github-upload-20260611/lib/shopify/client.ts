@@ -16,6 +16,7 @@ import {
 import type { Cart, Collection, PageInfo, Product } from "./types";
 
 const API_VERSION = "2026-04";
+const SHOPIFY_REVALIDATE_SECONDS = 60;
 
 type ShopifyResponse<T> = {
   data?: T;
@@ -27,13 +28,23 @@ type Connection<T> = {
   nodes: T[];
 };
 
-export async function fetchShopify<T>(query: string, variables: Record<string, unknown> = {}, cache: RequestCache = "no-store") {
+type ShopifyFetchOptions = {
+  cache?: RequestCache;
+  revalidate?: number;
+};
+
+export async function fetchShopify<T>(
+  query: string,
+  variables: Record<string, unknown> = {},
+  options: ShopifyFetchOptions = {}
+) {
   const config = getShopifyConfig();
   if (!config) {
-    throw new Error("Shopify Storefront API is not configured.");
+    throw new Error("Shopify checkout is not connected yet.");
   }
   const { domain, token } = config;
   const endpoint = `https://${domain}/api/${API_VERSION}/graphql.json`;
+  const { cache, revalidate } = options;
 
   const response = await fetch(endpoint, {
     method: "POST",
@@ -42,7 +53,8 @@ export async function fetchShopify<T>(query: string, variables: Record<string, u
       "X-Shopify-Storefront-Access-Token": token
     },
     body: JSON.stringify({ query, variables }),
-    cache
+    ...(cache ? { cache } : {}),
+    ...(typeof revalidate === "number" ? { next: { revalidate } } : {})
   });
 
   if (!response.ok) {
@@ -69,7 +81,8 @@ function unwrapProduct(product: any): Product {
       values: option.optionValues?.map((value: any) => value.name) || []
     })) || [],
     images: product.images?.nodes || [],
-    variants: product.variants?.nodes || []
+    variants: product.variants?.nodes || [],
+    collections: product.collections?.nodes || []
   };
 }
 
@@ -87,7 +100,7 @@ export async function getProducts({ first = 12, after, query }: { first?: number
   const data = await fetchShopify<{ products: Connection<any> }>(
     PRODUCTS_QUERY,
     { first, after, query },
-    "force-cache"
+    { revalidate: SHOPIFY_REVALIDATE_SECONDS }
   );
   return {
     products: unwrapProducts(data.products.nodes),
@@ -99,10 +112,10 @@ export async function getProductByHandle(handle: string) {
   const data = await fetchShopify<{ productByHandle: any | null }>(
     PRODUCT_BY_HANDLE_QUERY,
     { handle },
-    "force-cache"
+    { revalidate: SHOPIFY_REVALIDATE_SECONDS }
   );
   if (!data.productByHandle) return null;
-  const related = data.productByHandle.collections?.nodes?.[0]?.products?.nodes || [];
+  const related = data.productByHandle.relatedCollection?.nodes?.[0]?.products?.nodes || [];
   return {
     product: unwrapProduct(data.productByHandle),
     relatedProducts: unwrapProducts(related).filter((item) => item.handle !== handle)
@@ -113,7 +126,7 @@ export async function getCollections({ first = 20, after }: { first?: number; af
   const data = await fetchShopify<{ collections: Connection<Collection> }>(
     COLLECTIONS_QUERY,
     { first, after },
-    "force-cache"
+    { revalidate: SHOPIFY_REVALIDATE_SECONDS }
   );
   return data.collections;
 }
@@ -122,7 +135,7 @@ export async function getCollectionByHandle(handle: string, { first = 24, after 
   const data = await fetchShopify<{ collectionByHandle: any | null }>(
     COLLECTION_BY_HANDLE_QUERY,
     { handle, first, after },
-    "force-cache"
+    { revalidate: SHOPIFY_REVALIDATE_SECONDS }
   );
   if (!data.collectionByHandle) return null;
   return {
@@ -172,7 +185,7 @@ export async function removeFromCart(cartId: string, lineIds: string[]) {
 }
 
 export async function getCart(cartId: string) {
-  const data = await fetchShopify<{ cart: any | null }>(CART_QUERY, { id: cartId });
+  const data = await fetchShopify<{ cart: any | null }>(CART_QUERY, { id: cartId }, { cache: "no-store" });
   if (!data.cart) return null;
   return {
     ...data.cart,
@@ -184,7 +197,7 @@ export async function searchProducts(query: string, { first = 24, after }: { fir
   const data = await fetchShopify<{ products: Connection<any> }>(
     SEARCH_PRODUCTS_QUERY,
     { query, first, after },
-    "no-store"
+    { revalidate: SHOPIFY_REVALIDATE_SECONDS }
   );
   return {
     products: unwrapProducts(data.products.nodes),
