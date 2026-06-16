@@ -4,6 +4,7 @@
 
 :root {
   color-scheme: light;
+  --font-sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
 * {
@@ -16,9 +17,9 @@ html {
 
 body {
   margin: 0;
-  background: #f4f6f8;
-  color: #0f2233;
-  font-family: var(--font-sans), system-ui, -apple-system, "Segoe UI", sans-serif;
+  background: #f7f1e6;
+  color: #12100b;
+  font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
 }
 
@@ -56,40 +57,40 @@ img {
 }
 
 .button-primary {
-  background: #0f9d63;
-  color: #fff;
-  box-shadow: 0 8px 20px rgba(15, 157, 99, 0.25);
+  background: #d6a84f;
+  color: #0b0b0c;
+  box-shadow: 0 8px 22px rgba(214, 168, 79, 0.28);
 }
 
 .button-primary:hover {
-  background: #0b7d4e;
+  background: #f0c66c;
 }
 
 .button-secondary {
-  border: 1px solid #d6dee4;
+  border: 1px solid #d8c397;
   background: #fff;
-  color: #0f2233;
+  color: #12100b;
 }
 
 .button-secondary:hover {
-  border-color: #0f9d63;
-  color: #0b7d4e;
+  border-color: #d6a84f;
+  color: #a87922;
 }
 
 .button-whatsapp {
-  background: #25d366;
-  color: #07301c;
-  box-shadow: 0 8px 20px rgba(37, 211, 102, 0.3);
+  background: #0b0b0c;
+  color: #f0c66c;
+  box-shadow: 0 8px 22px rgba(11, 11, 12, 0.22);
 }
 
 .button-whatsapp:hover {
-  background: #1ebe5a;
+  background: #191611;
 }
 
 .field {
   width: 100%;
   min-height: 46px;
-  border: 1px solid #d6dee4;
+  border: 1px solid #d8c397;
   border-radius: 10px;
   background: #fff;
   padding: 0 14px;
@@ -99,8 +100,8 @@ img {
 }
 
 .field:focus {
-  border-color: #0f9d63;
-  box-shadow: 0 0 0 3px rgba(15, 157, 99, 0.15);
+  border-color: #d6a84f;
+  box-shadow: 0 0 0 3px rgba(214, 168, 79, 0.18);
 }
 
 .section-pad {
@@ -108,7 +109,7 @@ img {
 }
 
 .card {
-  border: 1px solid #e2e8ec;
+  border: 1px solid #e5d8bd;
   border-radius: 14px;
   background: #fff;
 }
@@ -121,7 +122,7 @@ img {
   font-weight: 800;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: #0b7d4e;
+  color: #a87922;
 }
 
 @keyframes marquee {

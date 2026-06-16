@@ -64,7 +64,7 @@ export default function HomeBuyingGuide() {
               );
             })}
 
-            <div className="flex items-start gap-3 rounded-xl bg-[#f4fbf7] p-5 text-sm text-muted">
+            <div className="flex items-start gap-3 rounded-xl bg-[#fbf5e8] p-5 text-sm text-muted">
               <ShieldIcon className="mt-0.5 h-5 w-5 shrink-0 text-brand" />
               <p>
                 Damaged or wrong item support is handled through the return policy. Keep parcel

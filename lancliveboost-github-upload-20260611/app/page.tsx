@@ -1,5 +1,5 @@
 import DealSection from "@/components/DealSection";
-import CustomerSurvey from "@/components/CustomerSurvey";
+import CustomerSurveyPrompt from "@/components/CustomerSurveyPrompt";
 import FeaturedCategories from "@/components/FeaturedCategories";
 import FeaturedProducts from "@/components/FeaturedProducts";
 import HomeBuyingGuide from "@/components/HomeBuyingGuide";
@@ -12,7 +12,7 @@ export default function HomePage() {
   return (
     <>
       <HeroBanner />
-      <CustomerSurvey />
+      <CustomerSurveyPrompt />
       <TrustBadges />
       <FeaturedCategories />
       <HomeBuyingGuide />

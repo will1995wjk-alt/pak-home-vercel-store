@@ -9,7 +9,7 @@ import { CartIcon } from "./Icons";
 const links = [
   { href: "/", label: "Home" },
   { href: "/collections", label: "Collections" },
-  { href: "/#customer-survey", label: "Survey" },
+  { href: "/survey", label: "Survey" },
   { href: "/search", label: "Search" },
   { href: "/about", label: "About" },
   { href: "/contact", label: "Contact" }
@@ -17,10 +17,10 @@ const links = [
 
 export default function Header() {
   return (
-    <header className="sticky top-0 z-40 border-b border-line bg-white/95 backdrop-blur">
+    <header className="sticky top-0 z-40 border-b border-brand/30 bg-navy text-white backdrop-blur">
       <div className="container flex min-h-16 items-center gap-3 py-2 sm:gap-4">
         <Link href="/" className="flex items-center gap-2 text-lg font-black">
-          <span className="grid h-9 w-9 place-items-center rounded-lg bg-brand text-white">PH</span>
+          <span className="grid h-9 w-9 place-items-center rounded-lg bg-brand text-navy">PH</span>
           <span className="hidden sm:inline">{siteConfig.name}</span>
         </Link>
 
@@ -40,12 +40,12 @@ export default function Header() {
         <SearchBar />
       </div>
 
-      <nav className="border-t border-line bg-white">
+      <nav className="border-t border-brand/20 bg-navy">
         <div className="container flex items-center gap-1 overflow-x-auto py-1.5 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {links.map((link) => (
             <Link
               key={link.href}
-              className="whitespace-nowrap rounded-lg px-3 py-2 text-sm font-bold text-ink hover:bg-paper hover:text-brand"
+              className="whitespace-nowrap rounded-lg px-3 py-2 text-sm font-bold text-white/85 hover:bg-white/10 hover:text-brand"
               href={link.href}
             >
               {link.label}
