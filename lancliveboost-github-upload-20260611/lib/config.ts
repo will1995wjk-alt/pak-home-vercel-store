@@ -1,7 +1,8 @@
 const defaultContact = {
   whatsappNumber: "923199815828",
   supportPhone: "+923199815828",
-  supportEmail: "will1995wjk@gmail.com"
+  supportEmail: "will1995wjk@gmail.com",
+  shopifyStoreUrl: "https://hjbcjw-h3.myshopify.com"
 };
 
 function contactValue(value: string | undefined, fallback: string) {
@@ -15,7 +16,7 @@ export const siteConfig = {
   name: process.env.NEXT_PUBLIC_SITE_NAME || "Pak Home Essentials",
   url: process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000",
   whatsappNumber: contactValue(process.env.NEXT_PUBLIC_WHATSAPP_NUMBER, defaultContact.whatsappNumber),
-  shopifyStoreUrl: process.env.NEXT_PUBLIC_SHOPIFY_STORE_URL || "",
+  shopifyStoreUrl: process.env.NEXT_PUBLIC_SHOPIFY_STORE_URL || defaultContact.shopifyStoreUrl,
   supportEmail: contactValue(process.env.NEXT_PUBLIC_SUPPORT_EMAIL, defaultContact.supportEmail),
   supportPhone: contactValue(process.env.NEXT_PUBLIC_SUPPORT_PHONE, defaultContact.supportPhone),
   facebookUrl: process.env.NEXT_PUBLIC_FACEBOOK_URL || "",
