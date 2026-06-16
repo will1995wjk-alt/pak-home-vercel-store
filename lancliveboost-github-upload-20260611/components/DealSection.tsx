@@ -1,18 +1,8 @@
 import { fallbackProducts } from "@/data/fallback-products";
-import { getProducts } from "@/lib/shopify/client";
 import ProductGrid from "./ProductGrid";
 
-export default async function DealSection() {
-  let products = fallbackProducts.slice(0, 4);
-
-  try {
-    const result = await getProducts({ first: 4, query: "tag:deal OR tag:sale" });
-    if (result.products.length) {
-      products = result.products;
-    }
-  } catch {
-    products = fallbackProducts.slice(0, 4);
-  }
+export default function DealSection() {
+  const products = fallbackProducts.filter((product) => product.tags.includes("deal")).slice(0, 4);
 
   return (
     <section className="bg-navy py-14 text-white">

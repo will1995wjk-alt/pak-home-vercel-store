@@ -1,12 +1,14 @@
-# Pak Home Essentials Headless Store
+# Pak Home Essentials Storefront
 
-Next.js + Vercel storefront for selling home appliances and daily essentials in Pakistan, with Shopify as the backend for products, inventory, cart, checkout, orders, payment, and shipping.
+Next.js + Vercel storefront for selling home appliances and daily essentials in Pakistan.
+
+Current operating mode: the storefront displays local catalog products and sends shoppers to the matching Shopify product page or WhatsApp for checkout. This works without Shopify Storefront API access. The Storefront API client is still kept in the codebase so the site can be switched back to full Headless mode later.
 
 ## What Is Included
 
 - Next.js App Router project with TypeScript and Tailwind CSS
-- Shopify Storefront API GraphQL client
-- Product, collection, search, cart, checkout, and static policy pages
+- Optional Shopify Storefront API GraphQL client for future Headless mode
+- Product, collection, search, Shopify product-page checkout links, and static policy pages
 - WhatsApp buttons on product cards, product pages, cart, header, hero, and floating support
 - Cash on Delivery, Bank Transfer, JazzCash, and Easypaisa guidance in copy and docs
 - GA4 and Meta Pixel placeholders that only load when environment variables are set
@@ -16,7 +18,7 @@ Next.js + Vercel storefront for selling home appliances and daily essentials in 
 ## Local Setup
 
 1. Copy `.env.example` to `.env.local`.
-2. Fill in your Shopify Storefront API credentials.
+2. Fill in your public site settings, WhatsApp number, and optional Shopify store URL.
 3. Install dependencies:
 
 ```bash
@@ -36,11 +38,10 @@ npm run dev
 Set these locally and in Vercel Project Settings > Environment Variables:
 
 ```bash
-SHOPIFY_STORE_DOMAIN=your-store.myshopify.com
-SHOPIFY_STOREFRONT_ACCESS_TOKEN=your_storefront_access_token
 NEXT_PUBLIC_SITE_NAME=Pak Home Essentials
 NEXT_PUBLIC_SITE_URL=https://your-vercel-domain.vercel.app
 NEXT_PUBLIC_WHATSAPP_NUMBER=923XXXXXXXXX
+NEXT_PUBLIC_SHOPIFY_STORE_URL=https://your-store.myshopify.com
 NEXT_PUBLIC_SUPPORT_EMAIL=support@example.com
 NEXT_PUBLIC_SUPPORT_PHONE=+92XXXXXXXXXX
 NEXT_PUBLIC_FACEBOOK_URL=
@@ -50,7 +51,7 @@ NEXT_PUBLIC_GA_ID=
 NEXT_PUBLIC_META_PIXEL_ID=
 ```
 
-Do not commit real API tokens. Shopify domain, token, and WhatsApp number are read from environment variables, not hardcoded.
+No Shopify Storefront API token is required in the temporary operating mode. `NEXT_PUBLIC_SHOPIFY_STORE_URL` is used to build product-page checkout links from local product handles.
 
 ## Deploy To Vercel
 
@@ -58,6 +59,6 @@ Push this folder to GitHub, import the repo in Vercel, add the environment varia
 
 ## Shopify Notes
 
-Use `products/shopify-products.csv` to import starter products into Shopify. Create collections matching the handles used by the frontend, such as `kitchen-appliances`, `home-cleaning`, `personal-care`, `daily-use-products`, and `storage-organization`.
+Use `products/shopify-products.csv` to import starter products into Shopify. Keep Shopify product handles aligned with local product handles so product buttons can open matching Shopify product pages.
 
 Read the files in `docs/` before launch.

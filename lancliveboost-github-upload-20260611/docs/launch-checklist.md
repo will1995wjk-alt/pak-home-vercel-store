@@ -1,8 +1,8 @@
 # Launch Checklist
 
-1. Set real Shopify Storefront API token.
-2. Set real Shopify store domain.
-3. Set real WhatsApp number.
+1. Set real WhatsApp number.
+2. Set optional Shopify store frontend URL.
+3. Confirm local product handles match Shopify product handles.
 4. Set real support phone and email.
 5. Replace placeholder product images.
 6. Import or create real products.
@@ -14,10 +14,10 @@
 12. Configure Easypaisa manual instructions.
 13. Configure Pakistan shipping zones.
 14. Test product pages.
-15. Test Add to Cart.
-16. Test cart quantity update.
-17. Test remove from cart.
-18. Test Shopify checkout.
+15. Test Buy Now links.
+16. Test Checkout links on product detail pages.
+17. Test `/cart` notice page.
+18. Test Shopify product-page checkout.
 19. Test WhatsApp product messages.
 20. Test WhatsApp cart confirmation.
 21. Test search.

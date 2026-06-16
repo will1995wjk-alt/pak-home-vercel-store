@@ -4,7 +4,6 @@ import ProductGallery from "@/components/ProductGallery";
 import ProductGrid from "@/components/ProductGrid";
 import ProductInfo from "@/components/ProductInfo";
 import { getFallbackProduct } from "@/lib/fallback-catalog";
-import { getProductByHandle } from "@/lib/shopify/client";
 import { createMetadata } from "@/lib/seo";
 
 type Props = {
@@ -13,9 +12,8 @@ type Props = {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { handle } = await params;
-  const result = await getProductByHandle(handle).catch(() => null);
-  const fallback = getFallbackProduct(handle);
-  const product = result?.product || fallback?.product;
+  const view = getFallbackProduct(handle);
+  const product = view?.product;
   if (!product) return createMetadata({ title: "Product" });
   const image = product.featuredImage?.url;
   return createMetadata({
@@ -28,16 +26,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function ProductPage({ params }: Props) {
   const { handle } = await params;
-  const result = await getProductByHandle(handle).catch(() => null);
-  const fallback = getFallbackProduct(handle);
-  const view = result || fallback;
+  const view = getFallbackProduct(handle);
   if (!view?.product) notFound();
 
   return (
     <div className="container py-10">
       <div className="grid gap-8 lg:grid-cols-2">
         <ProductGallery product={view.product} />
-        <ProductInfo product={view.product} isFallback={!result} />
+        <ProductInfo product={view.product} isFallback />
       </div>
       <section className="section-pad">
         <h2 className="text-3xl font-black">Related products</h2>

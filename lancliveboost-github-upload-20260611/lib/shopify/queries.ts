@@ -7,6 +7,7 @@ const PRODUCT_FRAGMENT = `#graphql
     descriptionHtml
     vendor
     productType
+    onlineStoreUrl
     availableForSale
     totalInventory
     tags

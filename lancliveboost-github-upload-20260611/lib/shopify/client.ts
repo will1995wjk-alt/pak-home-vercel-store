@@ -82,7 +82,8 @@ function unwrapProduct(product: any): Product {
     })) || [],
     images: product.images?.nodes || [],
     variants: product.variants?.nodes || [],
-    collections: product.collections?.nodes || []
+    collections: product.collections?.nodes || [],
+    shopifyProductUrl: product.onlineStoreUrl || undefined
   };
 }
 

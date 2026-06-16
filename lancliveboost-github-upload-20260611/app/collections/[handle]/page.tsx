@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import ProductGrid from "@/components/ProductGrid";
 import { getFallbackCollection } from "@/lib/fallback-catalog";
-import { getCollectionByHandle } from "@/lib/shopify/client";
 import { createMetadata } from "@/lib/seo";
 
 type Props = {
@@ -12,9 +11,8 @@ type Props = {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { handle } = await params;
-  const result = await getCollectionByHandle(handle).catch(() => null);
-  const fallback = getFallbackCollection(handle);
-  const collection = result?.collection || fallback?.collection;
+  const view = getFallbackCollection(handle);
+  const collection = view?.collection;
   if (!collection) return createMetadata({ title: "Collection" });
   return createMetadata({
     title: collection.title,
@@ -26,10 +24,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function CollectionPage({ params, searchParams }: Props) {
   const { handle } = await params;
-  const { after } = await searchParams;
-  const result = await getCollectionByHandle(handle, { first: 24, after }).catch(() => null);
-  const fallback = getFallbackCollection(handle);
-  const view = result || fallback;
+  await searchParams;
+  const view = getFallbackCollection(handle);
   if (!view?.collection) notFound();
 
   return (
@@ -37,7 +33,7 @@ export default async function CollectionPage({ params, searchParams }: Props) {
       <p className="eyebrow">Shop by category</p>
       <h1 className="mt-2 text-4xl font-black">{view.collection.title}</h1>
       {view.collection.description ? <p className="mt-3 max-w-3xl text-muted">{view.collection.description}</p> : null}
-      {!result ? <p className="mt-2 text-sm text-muted">Sample products are shown until Shopify products are connected.</p> : null}
+      <p className="mt-2 text-sm text-muted">Checkout is handled on each Shopify product page or WhatsApp.</p>
       <div className="mt-8">
         <ProductGrid products={view.collection.products || []} />
       </div>

@@ -20,19 +20,21 @@ In Vercel Project Settings > Environment Variables, add all values from `.env.ex
 
 Important values:
 
-1. `SHOPIFY_STORE_DOMAIN`
-2. `SHOPIFY_STOREFRONT_ACCESS_TOKEN`
-3. `NEXT_PUBLIC_SITE_URL`
-4. `NEXT_PUBLIC_WHATSAPP_NUMBER`
+1. `NEXT_PUBLIC_SITE_URL`
+2. `NEXT_PUBLIC_SITE_NAME`
+3. `NEXT_PUBLIC_WHATSAPP_NUMBER`
+4. `NEXT_PUBLIC_SHOPIFY_STORE_URL`
+5. `NEXT_PUBLIC_SUPPORT_EMAIL`
+6. `NEXT_PUBLIC_SUPPORT_PHONE`
 
-Use the Vercel generated URL for `NEXT_PUBLIC_SITE_URL` at first. After binding a custom domain, update this value.
+Use the Vercel generated URL for `NEXT_PUBLIC_SITE_URL` at first. After binding a custom domain, update this value. `NEXT_PUBLIC_SHOPIFY_STORE_URL` is optional; when it is empty, product purchase buttons fall back to WhatsApp.
 
 ## Deploy
 
 1. Click Deploy.
 2. Wait for the build to finish.
 3. Open the generated `vercel.app` preview domain.
-4. Test homepage, product page, cart, checkout, search, and WhatsApp.
+4. Test homepage, product page, local cart notice page, Shopify product-page links, search, and WhatsApp.
 
 ## Bind custom domain later
 

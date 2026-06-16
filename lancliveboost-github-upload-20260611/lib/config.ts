@@ -2,6 +2,7 @@ export const siteConfig = {
   name: process.env.NEXT_PUBLIC_SITE_NAME || "Pak Home Essentials",
   url: process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000",
   whatsappNumber: process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "",
+  shopifyStoreUrl: process.env.NEXT_PUBLIC_SHOPIFY_STORE_URL || "",
   supportEmail: process.env.NEXT_PUBLIC_SUPPORT_EMAIL || "",
   supportPhone: process.env.NEXT_PUBLIC_SUPPORT_PHONE || "",
   facebookUrl: process.env.NEXT_PUBLIC_FACEBOOK_URL || "",

@@ -1,4 +1,5 @@
 import type { Product } from "@/lib/shopify/types";
+import { siteConfig } from "@/lib/config";
 
 const fallbackImages = {
   kettle: "/images/product-kettle.png",
@@ -6,6 +7,12 @@ const fallbackImages = {
   mop: "/images/product-mop.png",
   storage: "/images/product-storage.png"
 };
+
+function getShopifyProductUrl(handle: string) {
+  const storeUrl = siteConfig.shopifyStoreUrl.replace(/\/$/, "");
+  if (!storeUrl) return "";
+  return `${storeUrl}/products/${handle}`;
+}
 
 function fallbackProduct(
   title: string,
@@ -34,6 +41,7 @@ function fallbackProduct(
     availableForSale: false,
     totalInventory: null,
     tags: [type, "Pakistan", "COD", ...tags],
+    shopifyProductUrl: getShopifyProductUrl(handle),
     collections: [],
     featuredImage: {
       url: image,

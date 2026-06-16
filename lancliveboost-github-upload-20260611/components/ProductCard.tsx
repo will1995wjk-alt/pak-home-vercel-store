@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import type { Product } from "@/lib/shopify/types";
 import { formatMoney, getCompareAtPrice, getDiscountPercent, getProductPrice, isDiscounted } from "@/lib/shopify/utils";
-import AddToCartButton from "./AddToCartButton";
+import BuyNowButton from "./BuyNowButton";
 import WhatsAppButton from "./WhatsAppButton";
 
 type Props = {
@@ -11,13 +11,6 @@ type Props = {
 
 export default function ProductCard({ product }: Props) {
   const image = product.featuredImage || product.images[0];
-  const firstVariant = product.variants[0];
-  const hasShopifyVariant = Boolean(firstVariant?.id?.startsWith("gid://shopify/"));
-  const unavailableReason = !hasShopifyVariant
-    ? "Shopify checkout is not connected yet."
-    : !product.availableForSale || !firstVariant?.availableForSale
-      ? "This product is out of stock."
-      : "";
   const price = getProductPrice(product);
   const compareAt = getCompareAtPrice(product);
   const discounted = isDiscounted(product);
@@ -55,7 +48,7 @@ export default function ProductCard({ product }: Props) {
           </div>
         </div>
         <div className="grid gap-2">
-          <AddToCartButton merchandiseId={firstVariant?.id || ""} unavailableReason={unavailableReason} />
+          <BuyNowButton product={{ title: product.title, handle: product.handle, price, shopifyProductUrl: product.shopifyProductUrl }} />
           <WhatsAppButton product={{ title: product.title, handle: product.handle, price }} />
         </div>
       </div>

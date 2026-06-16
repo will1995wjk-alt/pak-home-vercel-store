@@ -3,19 +3,13 @@
 import { useMemo, useState } from "react";
 import type { Product, ProductVariant } from "@/lib/shopify/types";
 import { formatMoney } from "@/lib/shopify/utils";
-import AddToCartButton from "./AddToCartButton";
+import BuyNowButton from "./BuyNowButton";
 import WhatsAppButton from "./WhatsAppButton";
 
 export default function ProductInfo({ product, isFallback = false }: { product: Product; isFallback?: boolean }) {
   const [variantId, setVariantId] = useState(product.variants[0]?.id || "");
   const [quantity, setQuantity] = useState(1);
   const variant = useMemo<ProductVariant | undefined>(() => product.variants.find((item) => item.id === variantId), [product.variants, variantId]);
-  const hasShopifyVariant = Boolean(variant?.id?.startsWith("gid://shopify/"));
-  const unavailableReason = !hasShopifyVariant
-    ? "Shopify checkout is not connected yet."
-    : !variant?.availableForSale
-      ? "This product is out of stock."
-      : "";
 
   return (
     <div className="grid content-start gap-5">
@@ -32,7 +26,7 @@ export default function ProductInfo({ product, isFallback = false }: { product: 
 
       <div className="grid gap-2 text-sm text-muted">
         {variant?.sku ? <p>SKU: {variant.sku}</p> : null}
-        <p>{isFallback ? "Demo product - order by WhatsApp" : variant?.availableForSale ? "In stock" : "Out of stock"}</p>
+        <p>{isFallback ? "Checkout on Shopify product page or WhatsApp" : variant?.availableForSale ? "In stock" : "Out of stock"}</p>
       </div>
 
       {product.variants.length > 1 ? (
@@ -54,10 +48,8 @@ export default function ProductInfo({ product, isFallback = false }: { product: 
       </label>
 
       <div className="grid gap-3 sm:grid-cols-3">
-        <AddToCartButton merchandiseId={variantId} quantity={quantity} unavailableReason={unavailableReason} />
-        <a className="button button-primary" href="/cart">
-          Checkout
-        </a>
+        <BuyNowButton product={{ title: product.title, handle: product.handle, price: variant?.price || product.priceRange.minVariantPrice, shopifyProductUrl: product.shopifyProductUrl }} />
+        <BuyNowButton label="Checkout" className="button button-primary" product={{ title: product.title, handle: product.handle, price: variant?.price || product.priceRange.minVariantPrice, shopifyProductUrl: product.shopifyProductUrl }} />
         <WhatsAppButton product={{ title: product.title, handle: product.handle, price: variant?.price || product.priceRange.minVariantPrice }} />
       </div>
 

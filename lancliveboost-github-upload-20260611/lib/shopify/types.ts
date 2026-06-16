@@ -38,6 +38,7 @@ export type Product = {
   availableForSale: boolean;
   totalInventory?: number | null;
   tags: string[];
+  shopifyProductUrl?: string;
   featuredImage?: ShopifyImage | null;
   images: ShopifyImage[];
   options: ProductOption[];

@@ -1,6 +1,5 @@
 import ProductGrid from "@/components/ProductGrid";
 import { emptyPageInfo, searchFallbackProducts } from "@/lib/fallback-catalog";
-import { searchProducts } from "@/lib/shopify/client";
 import { createMetadata } from "@/lib/seo";
 
 export const metadata = createMetadata({ title: "Search", description: "Search home appliances and daily essentials in Pakistan.", path: "/search" });
@@ -10,11 +9,10 @@ type Props = {
 };
 
 export default async function SearchPage({ searchParams }: Props) {
-  const { q = "", after } = await searchParams;
+  const { q = "" } = await searchParams;
   const query = q.trim();
-  const shopifyResult = query ? await searchProducts(query, { after }).catch(() => null) : null;
   const fallbackProducts = query ? searchFallbackProducts(query) : searchFallbackProducts("");
-  const result = shopifyResult || {
+  const result = {
     products: fallbackProducts,
     pageInfo: emptyPageInfo
   };
@@ -32,7 +30,7 @@ export default async function SearchPage({ searchParams }: Props) {
         {query ? (
           <>
             <p className="mb-4 text-muted">
-              Results for &quot;{query}&quot;{shopifyResult ? "" : " from sample products"}
+              Results for &quot;{query}&quot; from the local catalog
             </p>
             <ProductGrid products={result.products} />
             {result.pageInfo.hasNextPage && result.pageInfo.endCursor ? (
