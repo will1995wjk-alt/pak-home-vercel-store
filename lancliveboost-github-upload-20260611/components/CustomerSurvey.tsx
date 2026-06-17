@@ -36,6 +36,7 @@ const categories = [
 
 const paymentMethods = ["Cash on Delivery", "Bank Transfer", "JazzCash", "Easypaisa"];
 const purchaseTimelines = ["Immediately", "This week", "This month", "Just researching"];
+const failureMessage = "Something went wrong. Please try again or contact us on WhatsApp.";
 
 type SurveyStatus = "idle" | "success" | "error";
 
@@ -92,19 +93,19 @@ export default function CustomerSurvey() {
 
     if (!form.fullName.trim() || (!form.phoneNumber.trim() && !form.whatsappNumber.trim()) || !form.city.trim()) {
       setStatus("error");
-      setErrorMessage("Please add your name, city, and at least one phone or WhatsApp number.");
+      setErrorMessage(failureMessage);
       return;
     }
 
     if (selectedCategories.length === 0) {
       setStatus("error");
-      setErrorMessage("Please choose at least one product category.");
+      setErrorMessage(failureMessage);
       return;
     }
 
     if (!form.consent) {
       setStatus("error");
-      setErrorMessage("Please confirm that we can contact you on WhatsApp.");
+      setErrorMessage(failureMessage);
       return;
     }
 
@@ -124,7 +125,7 @@ export default function CustomerSurvey() {
       const result = (await response.json()) as { success?: boolean; message?: string };
 
       if (!response.ok || !result.success) {
-        throw new Error(result.message || "Survey submission failed.");
+        throw new Error("Survey submission failed.");
       }
 
       setStatus("success");
@@ -144,11 +145,7 @@ export default function CustomerSurvey() {
       setSelectedCategories([]);
     } catch (error) {
       setStatus("error");
-      setErrorMessage(
-        error instanceof Error && error.message
-          ? error.message
-          : "Something went wrong. Please try again or contact us on WhatsApp."
-      );
+      setErrorMessage(failureMessage);
     } finally {
       setIsSubmitting(false);
     }
@@ -345,7 +342,7 @@ export default function CustomerSurvey() {
 
             {status === "error" ? (
               <div className="rounded-xl border border-red-200 bg-red-50 p-4 text-sm font-bold text-red-700">
-                {errorMessage || "Something went wrong. Please try again or contact us on WhatsApp."}
+                {errorMessage || failureMessage}
               </div>
             ) : null}
 
