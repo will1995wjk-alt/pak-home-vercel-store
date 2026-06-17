@@ -1,22 +1,14 @@
-import { fallbackProducts } from "@/data/fallback-products";
-import { getCollectionByHandle, getProducts, logShopifyDebug } from "@/lib/shopify/client";
-import { isDiscounted } from "@/lib/shopify/utils";
+import { getCollectionByHandle, logShopifyDebug } from "@/lib/shopify/client";
 import ProductGrid from "./ProductGrid";
 
 const HOT_DEALS_COLLECTION_HANDLE = "hot-deals";
 
 export default async function DealSection() {
   const dealsCollection = await getCollectionByHandle(HOT_DEALS_COLLECTION_HANDLE, { first: 4 });
-  const collectionProducts = dealsCollection?.collection.products || [];
-  const { products: catalog } = collectionProducts.length ? { products: [] } : await getProducts({ first: 16 });
-  const discountedProducts = catalog
-    .filter((product) => isDiscounted(product) || product.tags.some((tag) => ["deal", "hot-deals"].includes(tag)))
-    .slice(0, 4);
-  const demoDeals = fallbackProducts.filter((product) => isDiscounted(product)).slice(0, 4);
-  const products = collectionProducts.length ? collectionProducts : discountedProducts.length ? discountedProducts : demoDeals;
+  const products = dealsCollection?.collection.products || [];
   logShopifyDebug("homepage.hot_deals.source", {
     handle: HOT_DEALS_COLLECTION_HANDLE,
-    source: collectionProducts.length ? "collection" : discountedProducts.length ? "discounted_products_fallback" : "demo_fallback",
+    source: products.length ? "collection" : "empty_collection",
     productCount: products.length
   });
 

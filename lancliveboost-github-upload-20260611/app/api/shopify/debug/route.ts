@@ -22,6 +22,7 @@ async function inspectCollection(handle: string) {
       title: data.collectionByHandle?.title || null,
       productCount: data.collectionByHandle?.products.nodes.length || 0,
       productHandles: data.collectionByHandle?.products.nodes.map((product) => product.handle) || [],
+      productTitles: data.collectionByHandle?.products.nodes.map((product) => product.title) || [],
       availableCount: data.collectionByHandle?.products.nodes.filter((product) => product.availableForSale).length || 0
     };
   } catch (error) {
@@ -30,6 +31,7 @@ async function inspectCollection(handle: string) {
       found: false,
       productCount: 0,
       productHandles: [],
+      productTitles: [],
       availableCount: 0,
       error: error instanceof Error ? error.message : "Unknown Shopify error"
     };
@@ -39,9 +41,17 @@ async function inspectCollection(handle: string) {
 export async function GET() {
   const config = getShopifyConfig();
   const collections = await Promise.all(DEBUG_COLLECTIONS.map(inspectCollection));
+  const homepageFeatured = collections.find((collection) => collection.handle === "homepage-featured");
+  const hotDeals = collections.find((collection) => collection.handle === "hot-deals");
 
   return NextResponse.json({
     ok: collections.every((collection) => collection.found && collection.productCount > 0),
+    homepageFeaturedHandle: homepageFeatured?.handle || "homepage-featured",
+    homepageFeaturedProductCount: homepageFeatured?.productCount || 0,
+    homepageFeaturedProductTitles: homepageFeatured?.productTitles || [],
+    hotDealsHandle: hotDeals?.handle || "hot-deals",
+    hotDealsProductCount: hotDeals?.productCount || 0,
+    hotDealsProductTitles: hotDeals?.productTitles || [],
     shopify: {
       domainConfigured: Boolean(config?.domain),
       tokenConfigured: Boolean(config?.token),

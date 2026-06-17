@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { getCollectionByHandle, getProducts, logShopifyDebug } from "@/lib/shopify/client";
+import { getCollectionByHandle, logShopifyDebug } from "@/lib/shopify/client";
 import { ArrowIcon } from "./Icons";
 import ProductGrid from "./ProductGrid";
 
@@ -7,12 +7,10 @@ const HOMEPAGE_FEATURED_COLLECTION_HANDLE = "homepage-featured";
 
 export default async function FeaturedProducts() {
   const featuredCollection = await getCollectionByHandle(HOMEPAGE_FEATURED_COLLECTION_HANDLE, { first: 8 });
-  const collectionProducts = featuredCollection?.collection.products || [];
-  const { products: fallbackProducts } = collectionProducts.length ? { products: [] } : await getProducts({ first: 8 });
-  const products = collectionProducts.length ? collectionProducts : fallbackProducts;
+  const products = featuredCollection?.collection.products || [];
   logShopifyDebug("homepage.featured.source", {
     handle: HOMEPAGE_FEATURED_COLLECTION_HANDLE,
-    source: collectionProducts.length ? "collection" : "products_fallback",
+    source: products.length ? "collection" : "empty_collection",
     productCount: products.length
   });
 
