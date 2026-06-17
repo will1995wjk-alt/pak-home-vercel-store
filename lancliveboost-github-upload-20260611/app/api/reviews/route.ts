@@ -18,6 +18,18 @@ type ReviewRequestBody = {
 
 const friendlyError = "Something went wrong. Please try again or contact us on WhatsApp.";
 
+function logSafeReviewError(action: "get" | "post", error: unknown) {
+  const maybeError = error as { code?: unknown; message?: unknown; name?: unknown; response?: { status?: unknown } };
+  const message = typeof maybeError.message === "string" ? maybeError.message.slice(0, 240) : "Unknown error";
+
+  console.error("[product-reviews] request_failed", {
+    action,
+    code: maybeError.code || maybeError.response?.status || "unknown",
+    name: typeof maybeError.name === "string" ? maybeError.name : "Error",
+    message
+  });
+}
+
 function cleanText(value: unknown, maxLength = 200) {
   if (typeof value !== "string") return "";
   return value.trim().slice(0, maxLength);
@@ -49,7 +61,9 @@ export async function GET(request: Request) {
       averageRating: summary.averageRating,
       reviewCount: summary.reviewCount
     });
-  } catch {
+  } catch (error) {
+    logSafeReviewError("get", error);
+
     return NextResponse.json({
       success: false,
       message: friendlyError,
@@ -100,7 +114,9 @@ export async function POST(request: Request) {
       success: true,
       message: "Review submitted successfully"
     });
-  } catch {
+  } catch (error) {
+    logSafeReviewError("post", error);
+
     return NextResponse.json({ success: false, message: friendlyError }, { status: 500 });
   }
 }
