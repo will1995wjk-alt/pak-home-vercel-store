@@ -17,6 +17,7 @@ type ReviewRequestBody = {
 };
 
 const friendlyError = "Something went wrong. Please try again or contact us on WhatsApp.";
+const minReviewTextLength = 5;
 
 function logSafeReviewError(action: "get" | "post", error: unknown) {
   const maybeError = error as { code?: unknown; message?: unknown; name?: unknown; response?: { status?: unknown } };
@@ -90,7 +91,7 @@ export async function POST(request: Request) {
     const imageUrl = cleanText(body.imageUrl, 500);
     const sourcePage = cleanText(body.sourcePage, 240) || `/products/${productHandle}`;
 
-    if (!productHandle || !productTitle || !rating || !customerName || !whatsappNumber || reviewText.length < 10) {
+    if (!productHandle || !productTitle || !rating || !customerName || !whatsappNumber || reviewText.length < minReviewTextLength) {
       return NextResponse.json({ success: false, message: friendlyError }, { status: 400 });
     }
 

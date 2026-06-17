@@ -19,6 +19,7 @@ type Props = {
 
 const successMessage = "Thank you! Your review has been submitted and will appear after approval.";
 const failureMessage = "Something went wrong. Please try again or contact us on WhatsApp.";
+const minReviewTextLength = 5;
 
 function stars(rating: number) {
   const rounded = Math.round(rating);
@@ -39,6 +40,7 @@ function formatDate(value: string) {
 
 export default function ProductReviews({ product, initialReviews, initialSummary }: Props) {
   const [status, setStatus] = useState<"idle" | "success" | "error">("idle");
+  const [message, setMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [form, setForm] = useState({
     rating: "5",
@@ -58,6 +60,7 @@ export default function ProductReviews({ product, initialReviews, initialSummary
   async function submitReview(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setStatus("idle");
+    setMessage("");
 
     const rating = Number(form.rating);
     if (
@@ -66,10 +69,11 @@ export default function ProductReviews({ product, initialReviews, initialSummary
       rating > 5 ||
       !form.customerName.trim() ||
       !form.whatsappNumber.trim() ||
-      form.reviewText.trim().length < 10 ||
+      form.reviewText.trim().length < minReviewTextLength ||
       !form.consent
     ) {
       setStatus("error");
+      setMessage(`Please write at least ${minReviewTextLength} characters in Review Text and complete all required fields.`);
       return;
     }
 
@@ -100,6 +104,7 @@ export default function ProductReviews({ product, initialReviews, initialSummary
       }
 
       setStatus("success");
+      setMessage(successMessage);
       setForm({
         rating: "5",
         customerName: "",
@@ -112,6 +117,7 @@ export default function ProductReviews({ product, initialReviews, initialSummary
       });
     } catch {
       setStatus("error");
+      setMessage(failureMessage);
     } finally {
       setIsSubmitting(false);
     }
@@ -250,11 +256,11 @@ export default function ProductReviews({ product, initialReviews, initialSummary
           </label>
 
           {status === "success" ? (
-            <div className="rounded-xl border border-brand/25 bg-brand/10 p-4 text-sm font-bold text-brand-dark">{successMessage}</div>
+            <div className="rounded-xl border border-brand/25 bg-brand/10 p-4 text-sm font-bold text-brand-dark">{message}</div>
           ) : null}
 
           {status === "error" ? (
-            <div className="rounded-xl border border-red-200 bg-red-50 p-4 text-sm font-bold text-red-700">{failureMessage}</div>
+            <div className="rounded-xl border border-red-200 bg-red-50 p-4 text-sm font-bold text-red-700">{message || failureMessage}</div>
           ) : null}
 
           <button className="button button-primary w-full sm:w-fit" type="submit" disabled={isSubmitting}>
