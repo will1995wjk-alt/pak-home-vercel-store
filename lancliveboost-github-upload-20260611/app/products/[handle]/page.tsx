@@ -3,6 +3,8 @@ import { notFound } from "next/navigation";
 import ProductGallery from "@/components/ProductGallery";
 import ProductGrid from "@/components/ProductGrid";
 import ProductInfo from "@/components/ProductInfo";
+import ProductReviews from "@/components/ProductReviews";
+import { getApprovedReviewsByProductHandle, getReviewSummary } from "@/lib/google/reviews";
 import { createMetadata } from "@/lib/seo";
 import { getProductByHandle } from "@/lib/shopify/client";
 
@@ -31,12 +33,18 @@ export default async function ProductPage({ params }: Props) {
   const view = await getProductByHandle(handle);
   if (!view?.product) notFound();
 
+  const [reviews, reviewSummary] = await Promise.all([
+    getApprovedReviewsByProductHandle(view.product.handle).catch(() => []),
+    getReviewSummary(view.product.handle).catch(() => ({ averageRating: 0, reviewCount: 0 }))
+  ]);
+
   return (
     <div className="container py-10">
       <div className="grid gap-8 lg:grid-cols-2">
         <ProductGallery product={view.product} />
         <ProductInfo product={view.product} isFallback={view.product.id.startsWith("fallback-")} />
       </div>
+      <ProductReviews product={view.product} initialReviews={reviews} initialSummary={reviewSummary} />
       <section className="section-pad">
         <h2 className="text-3xl font-black">Related products</h2>
         <div className="mt-6">

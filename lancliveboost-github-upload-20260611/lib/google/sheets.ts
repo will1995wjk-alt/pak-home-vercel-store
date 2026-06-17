@@ -1,4 +1,5 @@
 import { google } from "googleapis";
+import type { sheets_v4 } from "googleapis";
 
 export const SURVEY_HEADERS = [
   "Submitted At",
@@ -40,7 +41,7 @@ export type SurveyRow = {
   salesNotes?: string;
 };
 
-function getGoogleSheetsConfig() {
+export function getGoogleSheetsConfig() {
   const clientEmail = process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL?.trim();
   const privateKey = process.env.GOOGLE_PRIVATE_KEY?.replace(/\\n/g, "\n").replace(/^"|"$/g, "");
   const spreadsheetId = process.env.GOOGLE_SHEET_ID?.trim();
@@ -53,6 +54,17 @@ function getGoogleSheetsConfig() {
   }
 
   return { clientEmail, privateKey, spreadsheetId, sheetName };
+}
+
+export function getGoogleSheetsClient() {
+  const { clientEmail, privateKey } = getGoogleSheetsConfig();
+  const auth = new google.auth.JWT({
+    email: clientEmail,
+    key: privateKey,
+    scopes: ["https://www.googleapis.com/auth/spreadsheets"]
+  });
+
+  return google.sheets({ version: "v4", auth });
 }
 
 function toRowValues(data: SurveyRow) {
@@ -77,19 +89,16 @@ function toRowValues(data: SurveyRow) {
   ];
 }
 
-function quoteSheetName(sheetName: string) {
+export function quoteSheetName(sheetName: string) {
   return `'${sheetName.replace(/'/g, "''")}'`;
 }
 
-export async function appendSurveyRow(data: SurveyRow) {
-  const { clientEmail, privateKey, spreadsheetId, sheetName } = getGoogleSheetsConfig();
-  const auth = new google.auth.JWT({
-    email: clientEmail,
-    key: privateKey,
-    scopes: ["https://www.googleapis.com/auth/spreadsheets"]
-  });
-  const sheets = google.sheets({ version: "v4", auth });
-
+export async function ensureSheetWithHeaders(
+  sheets: sheets_v4.Sheets,
+  spreadsheetId: string,
+  sheetName: string,
+  headers: readonly string[]
+) {
   const spreadsheet = await sheets.spreadsheets.get({ spreadsheetId });
   const hasSheet = spreadsheet.data.sheets?.some((sheet) => sheet.properties?.title === sheetName);
 
@@ -117,9 +126,16 @@ export async function appendSurveyRow(data: SurveyRow) {
       spreadsheetId,
       range: headerRange,
       valueInputOption: "RAW",
-      requestBody: { values: [[...SURVEY_HEADERS]] }
+      requestBody: { values: [[...headers]] }
     });
   }
+}
+
+export async function appendSurveyRow(data: SurveyRow) {
+  const { spreadsheetId, sheetName } = getGoogleSheetsConfig();
+  const sheets = getGoogleSheetsClient();
+
+  await ensureSheetWithHeaders(sheets, spreadsheetId, sheetName, SURVEY_HEADERS);
 
   await sheets.spreadsheets.values.append({
     spreadsheetId,
