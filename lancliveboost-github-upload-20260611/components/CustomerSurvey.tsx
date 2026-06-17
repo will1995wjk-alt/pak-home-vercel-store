@@ -1,5 +1,6 @@
 "use client";
 
+import type { FormEvent } from "react";
 import { useMemo, useState } from "react";
 import { siteConfig } from "@/lib/config";
 import { cleanPhoneNumber } from "@/lib/shopify/utils";
@@ -17,13 +18,6 @@ const professions = [
   "Other"
 ];
 
-const incomeRanges = [
-  "Under PKR 50,000",
-  "PKR 50,000 - 100,000",
-  "PKR 100,000 - 200,000",
-  "PKR 200,000+"
-];
-
 const budgetRanges = [
   "Under PKR 3,000",
   "PKR 3,000 - 7,000",
@@ -32,47 +26,54 @@ const budgetRanges = [
 ];
 
 const categories = [
-  "Kitchen appliances",
-  "Home cleaning",
-  "Personal care",
-  "Daily use products",
-  "Storage products"
+  "Kitchen Appliances",
+  "Home Cleaning",
+  "Personal Care",
+  "Daily Use Products",
+  "Storage & Organization",
+  "Electronics Accessories"
 ];
 
-const buyTimelines = ["Today", "This week", "This month", "Just browsing"];
+const paymentMethods = ["Cash on Delivery", "Bank Transfer", "JazzCash", "Easypaisa"];
+const purchaseTimelines = ["Immediately", "This week", "This month", "Just researching"];
+
+type SurveyStatus = "idle" | "success" | "error";
 
 export default function CustomerSurvey() {
   const phone = cleanPhoneNumber(siteConfig.whatsappNumber);
-  const [selectedCategories, setSelectedCategories] = useState<string[]>(["Kitchen appliances"]);
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  const [status, setStatus] = useState<SurveyStatus>("idle");
+  const [errorMessage, setErrorMessage] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [form, setForm] = useState({
-    profession: "Homemaker",
+    fullName: "",
+    phoneNumber: "",
+    whatsappNumber: "",
     city: "",
-    income: "PKR 50,000 - 100,000",
-    budget: "PKR 3,000 - 7,000",
-    timeline: "This week",
-    payment: "Cash on Delivery",
-    contact: ""
+    profession: "Homemaker",
+    monthlyHouseholdBudget: "PKR 3,000 - 7,000",
+    productsInterestedIn: "",
+    preferredPaymentMethod: "Cash on Delivery",
+    purchaseTimeline: "This week",
+    notes: "",
+    consent: false
   });
 
   const whatsappHref = useMemo(() => {
     if (!phone) return "";
 
     const message = [
-      "Customer survey response",
-      `Profession: ${form.profession}`,
+      "Customer survey support",
+      `Name: ${form.fullName || "Not provided"}`,
       `City: ${form.city || "Not provided"}`,
-      `Monthly household income: ${form.income}`,
-      `Shopping budget: ${form.budget}`,
-      `Interested categories: ${selectedCategories.join(", ")}`,
-      `Buying timeline: ${form.timeline}`,
-      `Preferred payment: ${form.payment}`,
-      `Customer contact: ${form.contact || "Not provided"}`
+      `Interested categories: ${selectedCategories.join(", ") || "Not selected"}`,
+      `Products interested in: ${form.productsInterestedIn || "Not provided"}`
     ].join("\n");
 
     return `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
-  }, [form, phone, selectedCategories]);
+  }, [form.city, form.fullName, form.productsInterestedIn, phone, selectedCategories]);
 
-  function updateField(field: keyof typeof form, value: string) {
+  function updateField(field: keyof typeof form, value: string | boolean) {
     setForm((current) => ({ ...current, [field]: value }));
   }
 
@@ -82,6 +83,75 @@ export default function CustomerSurvey() {
         ? current.filter((item) => item !== category)
         : [...current, category]
     );
+  }
+
+  async function submitSurvey(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setStatus("idle");
+    setErrorMessage("");
+
+    if (!form.fullName.trim() || (!form.phoneNumber.trim() && !form.whatsappNumber.trim()) || !form.city.trim()) {
+      setStatus("error");
+      setErrorMessage("Please add your name, city, and at least one phone or WhatsApp number.");
+      return;
+    }
+
+    if (selectedCategories.length === 0) {
+      setStatus("error");
+      setErrorMessage("Please choose at least one product category.");
+      return;
+    }
+
+    if (!form.consent) {
+      setStatus("error");
+      setErrorMessage("Please confirm that we can contact you on WhatsApp.");
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      const response = await fetch("/api/survey", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ...form,
+          interestedProductCategories: selectedCategories,
+          sourcePage: "/survey"
+        })
+      });
+
+      const result = (await response.json()) as { success?: boolean; message?: string };
+
+      if (!response.ok || !result.success) {
+        throw new Error(result.message || "Survey submission failed.");
+      }
+
+      setStatus("success");
+      setForm({
+        fullName: "",
+        phoneNumber: "",
+        whatsappNumber: "",
+        city: "",
+        profession: "Homemaker",
+        monthlyHouseholdBudget: "PKR 3,000 - 7,000",
+        productsInterestedIn: "",
+        preferredPaymentMethod: "Cash on Delivery",
+        purchaseTimeline: "This week",
+        notes: "",
+        consent: false
+      });
+      setSelectedCategories([]);
+    } catch (error) {
+      setStatus("error");
+      setErrorMessage(
+        error instanceof Error && error.message
+          ? error.message
+          : "Something went wrong. Please try again or contact us on WhatsApp."
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
   }
 
   return (
@@ -97,8 +167,8 @@ export default function CustomerSurvey() {
                 Tell us what you need for your home.
               </h2>
               <p className="mt-4 text-base leading-7 text-white/85">
-                Help us understand your profession, budget, shopping needs, and favorite product
-                categories so we can bring better deals for Pakistan households.
+                Help us understand your budget, shopping needs, and favorite product categories so
+                we can bring better deals for Pakistan households.
               </p>
             </div>
 
@@ -114,7 +184,55 @@ export default function CustomerSurvey() {
             </div>
           </div>
 
-          <form className="grid gap-4" onSubmit={(event) => event.preventDefault()}>
+          <form className="grid gap-4" onSubmit={submitSurvey}>
+            <div className="grid gap-4 md:grid-cols-2">
+              <label className="grid gap-2 text-sm font-bold text-ink">
+                Full Name
+                <input
+                  className="field"
+                  value={form.fullName}
+                  onChange={(event) => updateField("fullName", event.target.value)}
+                  placeholder="Your full name"
+                  required
+                />
+              </label>
+
+              <label className="grid gap-2 text-sm font-bold text-ink">
+                City
+                <input
+                  className="field"
+                  value={form.city}
+                  onChange={(event) => updateField("city", event.target.value)}
+                  placeholder="Karachi, Lahore, Islamabad..."
+                  required
+                />
+              </label>
+            </div>
+
+            <div className="grid gap-4 md:grid-cols-2">
+              <label className="grid gap-2 text-sm font-bold text-ink">
+                Phone Number
+                <input
+                  className="field"
+                  value={form.phoneNumber}
+                  onChange={(event) => updateField("phoneNumber", event.target.value)}
+                  placeholder="+92..."
+                  type="tel"
+                />
+              </label>
+
+              <label className="grid gap-2 text-sm font-bold text-ink">
+                WhatsApp Number
+                <input
+                  className="field"
+                  value={form.whatsappNumber}
+                  onChange={(event) => updateField("whatsappNumber", event.target.value)}
+                  placeholder="+92..."
+                  type="tel"
+                />
+              </label>
+            </div>
+
             <div className="grid gap-4 md:grid-cols-2">
               <label className="grid gap-2 text-sm font-bold text-ink">
                 Profession
@@ -130,36 +248,11 @@ export default function CustomerSurvey() {
               </label>
 
               <label className="grid gap-2 text-sm font-bold text-ink">
-                City
-                <input
-                  className="field"
-                  value={form.city}
-                  onChange={(event) => updateField("city", event.target.value)}
-                  placeholder="Karachi, Lahore, Islamabad..."
-                />
-              </label>
-            </div>
-
-            <div className="grid gap-4 md:grid-cols-2">
-              <label className="grid gap-2 text-sm font-bold text-ink">
-                Monthly household income
+                Monthly Household Budget
                 <select
                   className="field"
-                  value={form.income}
-                  onChange={(event) => updateField("income", event.target.value)}
-                >
-                  {incomeRanges.map((range) => (
-                    <option key={range}>{range}</option>
-                  ))}
-                </select>
-              </label>
-
-              <label className="grid gap-2 text-sm font-bold text-ink">
-                Usual shopping budget
-                <select
-                  className="field"
-                  value={form.budget}
-                  onChange={(event) => updateField("budget", event.target.value)}
+                  value={form.monthlyHouseholdBudget}
+                  onChange={(event) => updateField("monthlyHouseholdBudget", event.target.value)}
                 >
                   {budgetRanges.map((range) => (
                     <option key={range}>{range}</option>
@@ -169,7 +262,7 @@ export default function CustomerSurvey() {
             </div>
 
             <fieldset className="grid gap-3 rounded-xl border border-line bg-white p-4">
-              <legend className="px-1 text-sm font-black text-ink">Interested categories</legend>
+              <legend className="px-1 text-sm font-black text-ink">Interested Product Categories</legend>
               <div className="grid gap-2 sm:grid-cols-2">
                 {categories.map((category) => (
                   <label key={category} className="flex items-center gap-2 text-sm font-semibold text-ink-soft">
@@ -185,56 +278,95 @@ export default function CustomerSurvey() {
               </div>
             </fieldset>
 
+            <label className="grid gap-2 text-sm font-bold text-ink">
+              Products Interested In
+              <input
+                className="field"
+                value={form.productsInterestedIn}
+                onChange={(event) => updateField("productsInterestedIn", event.target.value)}
+                placeholder="Blender, vacuum cleaner, storage boxes..."
+              />
+            </label>
+
             <div className="grid gap-4 md:grid-cols-2">
               <label className="grid gap-2 text-sm font-bold text-ink">
-                Buying timeline
+                Preferred Payment Method
                 <select
                   className="field"
-                  value={form.timeline}
-                  onChange={(event) => updateField("timeline", event.target.value)}
+                  value={form.preferredPaymentMethod}
+                  onChange={(event) => updateField("preferredPaymentMethod", event.target.value)}
                 >
-                  {buyTimelines.map((timeline) => (
-                    <option key={timeline}>{timeline}</option>
+                  {paymentMethods.map((method) => (
+                    <option key={method}>{method}</option>
                   ))}
                 </select>
               </label>
 
               <label className="grid gap-2 text-sm font-bold text-ink">
-                Preferred payment
+                Purchase Timeline
                 <select
                   className="field"
-                  value={form.payment}
-                  onChange={(event) => updateField("payment", event.target.value)}
+                  value={form.purchaseTimeline}
+                  onChange={(event) => updateField("purchaseTimeline", event.target.value)}
                 >
-                  <option>Cash on Delivery</option>
-                  <option>JazzCash</option>
-                  <option>Easypaisa</option>
-                  <option>Bank transfer</option>
+                  {purchaseTimelines.map((timeline) => (
+                    <option key={timeline}>{timeline}</option>
+                  ))}
                 </select>
               </label>
             </div>
 
             <label className="grid gap-2 text-sm font-bold text-ink">
-              Phone or WhatsApp
-              <input
-                className="field"
-                value={form.contact}
-                onChange={(event) => updateField("contact", event.target.value)}
-                placeholder="+92..."
+              Notes / Requirements
+              <textarea
+                className="field min-h-28 resize-y"
+                value={form.notes}
+                onChange={(event) => updateField("notes", event.target.value)}
+                placeholder="Tell us about your requirements, budget range, or delivery preference."
               />
             </label>
 
-            {whatsappHref ? (
-              <a className="button button-whatsapp w-full sm:w-fit" href={whatsappHref} target="_blank" rel="noreferrer">
-                <WhatsAppIcon className="h-5 w-5" />
-                Submit survey on WhatsApp
+            <label className="flex items-start gap-3 rounded-xl border border-line bg-paper p-4 text-sm font-semibold leading-6 text-ink-soft">
+              <input
+                type="checkbox"
+                checked={form.consent}
+                onChange={(event) => updateField("consent", event.target.checked)}
+                className="mt-1 h-4 w-4 shrink-0 accent-brand"
+                required
+              />
+              I agree to be contacted on WhatsApp for product recommendations and offers.
+            </label>
+
+            {status === "success" ? (
+              <div className="rounded-xl border border-brand/25 bg-brand/10 p-4 text-sm font-bold text-brand-dark">
+                Thank you! Our team will contact you on WhatsApp soon.
+              </div>
+            ) : null}
+
+            {status === "error" ? (
+              <div className="rounded-xl border border-red-200 bg-red-50 p-4 text-sm font-bold text-red-700">
+                {errorMessage || "Something went wrong. Please try again or contact us on WhatsApp."}
+              </div>
+            ) : null}
+
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+              <button className="button button-primary w-full sm:w-fit" type="submit" disabled={isSubmitting}>
+                {isSubmitting ? "Submitting..." : "Submit Survey"}
                 <ArrowIcon className="h-4 w-4" />
-              </a>
-            ) : (
-              <button className="button w-full cursor-not-allowed bg-[#d6dee4] text-ink-soft sm:w-fit" disabled>
-                Set WhatsApp number to collect responses
               </button>
-            )}
+
+              {whatsappHref ? (
+                <a
+                  className="button button-whatsapp w-full sm:w-fit"
+                  href={whatsappHref}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  <WhatsAppIcon className="h-5 w-5" />
+                  Contact on WhatsApp
+                </a>
+              ) : null}
+            </div>
           </form>
         </div>
       </div>
