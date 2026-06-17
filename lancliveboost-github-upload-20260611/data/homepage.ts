@@ -1,4 +1,5 @@
-export const announcementText = "Cash on Delivery Available Across Pakistan | WhatsApp Order Support";
+export const announcementText =
+  "Cash on Delivery Available Across Pakistan | WhatsApp: +923199815828 | Company Address: CCA223, CBW, DHA, Phase 8, Lahore | WhatsApp Order Support";
 
 export const categories = [
   {
