@@ -1,10 +1,19 @@
-import { getProducts } from "@/lib/shopify/client";
+import { fallbackProducts } from "@/data/fallback-products";
+import { getCollectionByHandle, getProducts } from "@/lib/shopify/client";
 import { isDiscounted } from "@/lib/shopify/utils";
 import ProductGrid from "./ProductGrid";
 
+const HOT_DEALS_COLLECTION_HANDLE = "hot-deals";
+
 export default async function DealSection() {
-  const { products: catalog } = await getProducts({ first: 16 });
-  const products = catalog.filter((product) => isDiscounted(product) || product.tags.some((tag) => ["deal", "hot-deals"].includes(tag))).slice(0, 4);
+  const dealsCollection = await getCollectionByHandle(HOT_DEALS_COLLECTION_HANDLE, { first: 4 });
+  const collectionProducts = dealsCollection?.collection.products || [];
+  const { products: catalog } = collectionProducts.length ? { products: [] } : await getProducts({ first: 16 });
+  const discountedProducts = catalog
+    .filter((product) => isDiscounted(product) || product.tags.some((tag) => ["deal", "hot-deals"].includes(tag)))
+    .slice(0, 4);
+  const demoDeals = fallbackProducts.filter((product) => isDiscounted(product)).slice(0, 4);
+  const products = collectionProducts.length ? collectionProducts : discountedProducts.length ? discountedProducts : demoDeals;
 
   return (
     <section className="bg-navy py-14 text-white">

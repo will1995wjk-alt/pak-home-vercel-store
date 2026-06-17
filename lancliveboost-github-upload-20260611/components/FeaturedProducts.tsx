@@ -1,10 +1,15 @@
 import Link from "next/link";
-import { getProducts } from "@/lib/shopify/client";
+import { getCollectionByHandle, getProducts } from "@/lib/shopify/client";
 import { ArrowIcon } from "./Icons";
 import ProductGrid from "./ProductGrid";
 
+const HOMEPAGE_FEATURED_COLLECTION_HANDLE = "homepage-featured";
+
 export default async function FeaturedProducts() {
-  const { products } = await getProducts({ first: 8 });
+  const featuredCollection = await getCollectionByHandle(HOMEPAGE_FEATURED_COLLECTION_HANDLE, { first: 8 });
+  const collectionProducts = featuredCollection?.collection.products || [];
+  const { products: fallbackProducts } = collectionProducts.length ? { products: [] } : await getProducts({ first: 8 });
+  const products = collectionProducts.length ? collectionProducts : fallbackProducts;
 
   return (
     <section className="section-pad">
