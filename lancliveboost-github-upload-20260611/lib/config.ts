@@ -13,7 +13,7 @@ function contactValue(value: string | undefined, fallback: string) {
 }
 
 export const siteConfig = {
-  name: process.env.NEXT_PUBLIC_SITE_NAME || "Pak Home Essentials",
+  name: process.env.NEXT_PUBLIC_SITE_NAME || "Pak Family Pro",
   url: process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000",
   whatsappNumber: contactValue(process.env.NEXT_PUBLIC_WHATSAPP_NUMBER, defaultContact.whatsappNumber),
   shopifyStoreUrl: process.env.NEXT_PUBLIC_SHOPIFY_STORE_URL || defaultContact.shopifyStoreUrl,

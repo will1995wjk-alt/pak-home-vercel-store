@@ -10,7 +10,7 @@ export default function AboutPage() {
   return (
     <>
       <PageHero
-        title="About Pak Home Essentials"
+        title="About Pak Family Pro"
         subtitle="A Pakistan-based online store making everyday home shopping simple, affordable, and trustworthy."
       />
       <section className="section-pad">

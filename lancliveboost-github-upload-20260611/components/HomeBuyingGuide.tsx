@@ -28,7 +28,7 @@ export default function HomeBuyingGuide() {
             <p className="eyebrow">Built for Pakistan shoppers</p>
             <h2 className="mt-2 text-3xl font-black md:text-4xl">Simple shopping with COD, support, and clear policies.</h2>
             <p className="mt-4 max-w-2xl text-muted">
-              Pak Home Essentials is designed for customers who want practical home products, quick
+              Pak Family Pro is designed for customers who want practical home products, quick
               answers, and payment options that feel familiar.
             </p>
             <div className="mt-6 flex flex-wrap gap-3">

@@ -19,9 +19,12 @@ export default function Header() {
   return (
     <header className="sticky top-0 z-40 border-b border-line bg-white/95 text-ink backdrop-blur">
       <div className="container flex min-h-16 items-center gap-3 py-2 sm:gap-4">
-        <Link href="/" className="flex items-center gap-2 text-lg font-black">
-          <span className="grid h-9 w-9 place-items-center rounded-lg bg-brand text-white">PH</span>
-          <span className="hidden sm:inline">{siteConfig.name}</span>
+        <Link href="/" className="flex shrink-0 items-center" aria-label={`${siteConfig.name} home`}>
+          <img
+            src="/brand/pakfamilypro-logo.png"
+            alt={siteConfig.name}
+            className="h-9 w-auto max-w-[170px] object-contain sm:h-10 sm:max-w-[230px]"
+          />
         </Link>
 
         <div className="ml-auto hidden max-w-md flex-1 md:block">

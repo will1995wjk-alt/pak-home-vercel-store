@@ -31,9 +31,8 @@ export default function Footer() {
     <footer className="border-t border-line bg-navy text-white">
       <div className="container grid gap-10 py-12 md:grid-cols-2 lg:grid-cols-4">
         <div>
-          <div className="flex items-center gap-2 text-lg font-black">
-            <span className="grid h-9 w-9 place-items-center rounded-lg bg-brand text-white">PH</span>
-            {siteConfig.name}
+          <div className="inline-flex rounded-lg bg-white px-3 py-2">
+            <img src="/brand/pakfamilypro-logo.png" alt={siteConfig.name} className="h-10 w-auto max-w-[230px] object-contain" />
           </div>
           <p className="mt-4 max-w-xs text-pretty leading-relaxed text-white/70">
             Affordable home appliances and daily essentials in Pakistan with Cash on Delivery, WhatsApp support, and
