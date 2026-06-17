@@ -11,9 +11,9 @@ const config: Config = {
         paper: "#f5f6f8",
         brand: "#f5820b",
         "brand-dark": "#d96b00",
-        navy: "#0f2747",
-        "navy-light": "#1c3a5e",
-        accent: "#0f2747",
+        navy: "#1e40c9",
+        "navy-light": "#2c52e0",
+        accent: "#1e40c9",
         whatsapp: "#25d366"
       },
       boxShadow: {

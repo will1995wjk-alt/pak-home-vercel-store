@@ -68,12 +68,12 @@ img {
 .button-secondary {
   border: 1px solid #cfd6df;
   background: #fff;
-  color: #0f2747;
+  color: #1e40c9;
 }
 
 .button-secondary:hover {
-  border-color: #0f2747;
-  color: #0f2747;
+  border-color: #1e40c9;
+  color: #1e40c9;
 }
 
 .button-whatsapp {
