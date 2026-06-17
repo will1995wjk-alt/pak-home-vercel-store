@@ -16,8 +16,8 @@ html {
 
 body {
   margin: 0;
-  background: #f4f6f8;
-  color: #0f2233;
+  background: #ffffff;
+  color: #111418;
   font-family: var(--font-sans), system-ui, -apple-system, "Segoe UI", sans-serif;
   -webkit-font-smoothing: antialiased;
 }
@@ -56,24 +56,24 @@ img {
 }
 
 .button-primary {
-  background: #0f9d63;
+  background: #f5820b;
   color: #fff;
-  box-shadow: 0 8px 20px rgba(15, 157, 99, 0.25);
+  box-shadow: 0 8px 20px rgba(245, 130, 11, 0.28);
 }
 
 .button-primary:hover {
-  background: #0b7d4e;
+  background: #d96b00;
 }
 
 .button-secondary {
-  border: 1px solid #d6dee4;
+  border: 1px solid #cfd6df;
   background: #fff;
-  color: #0f2233;
+  color: #0f2747;
 }
 
 .button-secondary:hover {
-  border-color: #0f9d63;
-  color: #0b7d4e;
+  border-color: #0f2747;
+  color: #0f2747;
 }
 
 .button-whatsapp {
@@ -99,8 +99,8 @@ img {
 }
 
 .field:focus {
-  border-color: #0f9d63;
-  box-shadow: 0 0 0 3px rgba(15, 157, 99, 0.15);
+  border-color: #f5820b;
+  box-shadow: 0 0 0 3px rgba(245, 130, 11, 0.18);
 }
 
 .section-pad {
@@ -121,7 +121,7 @@ img {
   font-weight: 800;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: #0b7d4e;
+  color: #d96b00;
 }
 
 @keyframes marquee {

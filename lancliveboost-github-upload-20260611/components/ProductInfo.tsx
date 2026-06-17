@@ -4,9 +4,12 @@ import { useMemo, useState } from "react";
 import type { Product, ProductVariant } from "@/lib/shopify/types";
 import { formatMoney } from "@/lib/shopify/utils";
 import AddToCartButton from "./AddToCartButton";
+import StarRating from "./StarRating";
 import WhatsAppButton from "./WhatsAppButton";
 
-export default function ProductInfo({ product }: { product: Product }) {
+type ReviewSummary = { count: number; average: number };
+
+export default function ProductInfo({ product, reviewSummary }: { product: Product; reviewSummary?: ReviewSummary }) {
   const [variantId, setVariantId] = useState(product.variants[0]?.id || "");
   const [quantity, setQuantity] = useState(1);
   const variant = useMemo<ProductVariant | undefined>(() => product.variants.find((item) => item.id === variantId), [product.variants, variantId]);
@@ -15,6 +18,15 @@ export default function ProductInfo({ product }: { product: Product }) {
     <div className="grid content-start gap-5">
       <div>
         <h1 className="text-4xl font-black">{product.title}</h1>
+        {reviewSummary && reviewSummary.count > 0 ? (
+          <a href="#reviews" className="mt-2 inline-flex items-center gap-2 text-sm">
+            <StarRating value={reviewSummary.average} size={16} />
+            <span className="font-bold">{reviewSummary.average.toFixed(1)}</span>
+            <span className="text-muted underline-offset-2 hover:underline">
+              ({reviewSummary.count} review{reviewSummary.count > 1 ? "s" : ""})
+            </span>
+          </a>
+        ) : null}
         <div className="mt-3 flex flex-wrap items-center gap-3">
           <strong className="text-2xl">{formatMoney(variant?.price || product.priceRange.minVariantPrice)}</strong>
           {variant?.compareAtPrice ? <span className="text-muted line-through">{formatMoney(variant.compareAtPrice)}</span> : null}

@@ -96,6 +96,15 @@ export async function getProducts({ first = 12, after, query }: { first?: number
 }
 
 export async function getProductByHandle(handle: string) {
+  if (!getShopifyConfig()) {
+    const { fallbackProducts } = await import("@/data/fallback-products");
+    const product = fallbackProducts.find((item) => item.handle === handle);
+    if (!product) return null;
+    return {
+      product,
+      relatedProducts: fallbackProducts.filter((item) => item.handle !== handle)
+    };
+  }
   const data = await fetchShopify<{ productByHandle: any | null }>(
     PRODUCT_BY_HANDLE_QUERY,
     { handle },

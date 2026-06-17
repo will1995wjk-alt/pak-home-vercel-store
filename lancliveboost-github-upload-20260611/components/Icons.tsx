@@ -130,6 +130,14 @@ export function ArrowIcon(props: IconProps) {
   );
 }
 
+export function StarIcon(props: IconProps) {
+  return (
+    <svg {...base} {...props}>
+      <path d="m12 3 2.7 5.5 6 .9-4.3 4.2 1 6-5.4-2.8L6.6 19.6l1-6L3.3 9.4l6-.9z" />
+    </svg>
+  );
+}
+
 export const trustIconMap = {
   cod: CodIcon,
   truck: TruckIcon,

@@ -3,6 +3,9 @@ import { notFound } from "next/navigation";
 import ProductGallery from "@/components/ProductGallery";
 import ProductGrid from "@/components/ProductGrid";
 import ProductInfo from "@/components/ProductInfo";
+import ProductReviews from "@/components/ProductReviews";
+import { getReviews } from "@/app/actions/reviews";
+import { summarizeReviews } from "@/lib/reviews";
 import { getProductByHandle } from "@/lib/shopify/client";
 import { createMetadata } from "@/lib/seo";
 
@@ -28,12 +31,16 @@ export default async function ProductPage({ params }: Props) {
   const result = await getProductByHandle(handle).catch(() => null);
   if (!result?.product) notFound();
 
+  const reviews = await getReviews(result.product.handle);
+  const summary = summarizeReviews(reviews);
+
   return (
     <div className="container py-10">
       <div className="grid gap-8 lg:grid-cols-2">
         <ProductGallery product={result.product} />
-        <ProductInfo product={result.product} />
+        <ProductInfo product={result.product} reviewSummary={{ count: summary.count, average: summary.average }} />
       </div>
+      <ProductReviews productHandle={result.product.handle} productId={result.product.id} reviews={reviews} />
       <section className="section-pad">
         <h2 className="text-3xl font-black">Related products</h2>
         <div className="mt-6">
