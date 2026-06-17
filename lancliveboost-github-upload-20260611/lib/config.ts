@@ -1,7 +1,7 @@
 const defaultContact = {
   whatsappNumber: "923199815828",
   supportPhone: "+923199815828",
-  supportEmail: "will1995wjk@gmail.com",
+  supportEmail: "will1995wjk@gmial.com",
   shopifyStoreUrl: "https://hjbcjw-h3.myshopify.com"
 };
 

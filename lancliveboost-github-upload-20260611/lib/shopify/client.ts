@@ -14,6 +14,14 @@ import {
   UPDATE_CART_MUTATION
 } from "./mutations";
 import type { Cart, Collection, PageInfo, Product } from "./types";
+import {
+  emptyPageInfo,
+  getFallbackCollection,
+  getFallbackCollections,
+  getFallbackProduct,
+  getFallbackProducts,
+  searchFallbackProducts
+} from "../fallback-catalog";
 
 const API_VERSION = "2026-04";
 const SHOPIFY_REVALIDATE_SECONDS = 60;
@@ -98,54 +106,69 @@ function throwUserErrors(errors?: { message: string }[]) {
 }
 
 export async function getProducts({ first = 12, after, query }: { first?: number; after?: string; query?: string } = {}) {
-  const data = await fetchShopify<{ products: Connection<any> }>(
-    PRODUCTS_QUERY,
-    { first, after, query },
-    { revalidate: SHOPIFY_REVALIDATE_SECONDS }
-  );
-  return {
-    products: unwrapProducts(data.products.nodes),
-    pageInfo: data.products.pageInfo
-  };
+  try {
+    const data = await fetchShopify<{ products: Connection<any> }>(
+      PRODUCTS_QUERY,
+      { first, after, query },
+      { revalidate: SHOPIFY_REVALIDATE_SECONDS }
+    );
+    const products = unwrapProducts(data.products.nodes);
+    return products.length ? { products, pageInfo: data.products.pageInfo } : getFallbackProducts(first);
+  } catch {
+    return getFallbackProducts(first);
+  }
 }
 
 export async function getProductByHandle(handle: string) {
-  const data = await fetchShopify<{ productByHandle: any | null }>(
-    PRODUCT_BY_HANDLE_QUERY,
-    { handle },
-    { revalidate: SHOPIFY_REVALIDATE_SECONDS }
-  );
-  if (!data.productByHandle) return null;
-  const related = data.productByHandle.relatedCollection?.nodes?.[0]?.products?.nodes || [];
-  return {
-    product: unwrapProduct(data.productByHandle),
-    relatedProducts: unwrapProducts(related).filter((item) => item.handle !== handle)
-  };
+  try {
+    const data = await fetchShopify<{ productByHandle: any | null }>(
+      PRODUCT_BY_HANDLE_QUERY,
+      { handle },
+      { revalidate: SHOPIFY_REVALIDATE_SECONDS }
+    );
+    if (!data.productByHandle) return getFallbackProduct(handle);
+    const related = data.productByHandle.relatedCollection?.nodes?.[0]?.products?.nodes || [];
+    return {
+      product: unwrapProduct(data.productByHandle),
+      relatedProducts: unwrapProducts(related).filter((item) => item.handle !== handle)
+    };
+  } catch {
+    return getFallbackProduct(handle);
+  }
 }
 
 export async function getCollections({ first = 20, after }: { first?: number; after?: string } = {}) {
-  const data = await fetchShopify<{ collections: Connection<Collection> }>(
-    COLLECTIONS_QUERY,
-    { first, after },
-    { revalidate: SHOPIFY_REVALIDATE_SECONDS }
-  );
-  return data.collections;
+  try {
+    const data = await fetchShopify<{ collections: Connection<Collection> }>(
+      COLLECTIONS_QUERY,
+      { first, after },
+      { revalidate: SHOPIFY_REVALIDATE_SECONDS }
+    );
+    return data.collections.nodes.length ? data.collections : getFallbackCollections();
+  } catch {
+    return getFallbackCollections();
+  }
 }
 
 export async function getCollectionByHandle(handle: string, { first = 24, after }: { first?: number; after?: string } = {}) {
-  const data = await fetchShopify<{ collectionByHandle: any | null }>(
-    COLLECTION_BY_HANDLE_QUERY,
-    { handle, first, after },
-    { revalidate: SHOPIFY_REVALIDATE_SECONDS }
-  );
-  if (!data.collectionByHandle) return null;
-  return {
-    collection: {
-      ...data.collectionByHandle,
-      products: unwrapProducts(data.collectionByHandle.products.nodes)
-    } as Collection,
-    pageInfo: data.collectionByHandle.products.pageInfo as PageInfo
-  };
+  try {
+    const data = await fetchShopify<{ collectionByHandle: any | null }>(
+      COLLECTION_BY_HANDLE_QUERY,
+      { handle, first, after },
+      { revalidate: SHOPIFY_REVALIDATE_SECONDS }
+    );
+    if (!data.collectionByHandle) return getFallbackCollection(handle);
+    const products = unwrapProducts(data.collectionByHandle.products.nodes);
+    return {
+      collection: {
+        ...data.collectionByHandle,
+        products
+      } as Collection,
+      pageInfo: data.collectionByHandle.products.pageInfo as PageInfo
+    };
+  } catch {
+    return getFallbackCollection(handle);
+  }
 }
 
 export async function createCart(lines: { merchandiseId: string; quantity: number }[] = []) {
@@ -195,13 +218,21 @@ export async function getCart(cartId: string) {
 }
 
 export async function searchProducts(query: string, { first = 24, after }: { first?: number; after?: string } = {}) {
-  const data = await fetchShopify<{ products: Connection<any> }>(
-    SEARCH_PRODUCTS_QUERY,
-    { query, first, after },
-    { revalidate: SHOPIFY_REVALIDATE_SECONDS }
-  );
-  return {
-    products: unwrapProducts(data.products.nodes),
-    pageInfo: data.products.pageInfo
-  };
+  try {
+    const data = await fetchShopify<{ products: Connection<any> }>(
+      SEARCH_PRODUCTS_QUERY,
+      { query, first, after },
+      { revalidate: SHOPIFY_REVALIDATE_SECONDS }
+    );
+    const products = unwrapProducts(data.products.nodes);
+    return {
+      products: products.length ? products : searchFallbackProducts(query).slice(0, first),
+      pageInfo: products.length ? data.products.pageInfo : emptyPageInfo
+    };
+  } catch {
+    return {
+      products: searchFallbackProducts(query).slice(0, first),
+      pageInfo: emptyPageInfo
+    };
+  }
 }

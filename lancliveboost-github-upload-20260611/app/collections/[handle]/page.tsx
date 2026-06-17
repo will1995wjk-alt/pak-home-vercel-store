@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import ProductGrid from "@/components/ProductGrid";
-import { getFallbackCollection } from "@/lib/fallback-catalog";
 import { createMetadata } from "@/lib/seo";
+import { getCollectionByHandle } from "@/lib/shopify/client";
 
 type Props = {
   params: Promise<{ handle: string }>;
@@ -11,7 +11,7 @@ type Props = {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { handle } = await params;
-  const view = getFallbackCollection(handle);
+  const view = await getCollectionByHandle(handle);
   const collection = view?.collection;
   if (!collection) return createMetadata({ title: "Collection" });
   return createMetadata({
@@ -22,10 +22,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   });
 }
 
+export const revalidate = 60;
+
 export default async function CollectionPage({ params, searchParams }: Props) {
   const { handle } = await params;
-  await searchParams;
-  const view = getFallbackCollection(handle);
+  const { after } = await searchParams;
+  const view = await getCollectionByHandle(handle, { after });
   if (!view?.collection) notFound();
 
   return (
@@ -33,7 +35,7 @@ export default async function CollectionPage({ params, searchParams }: Props) {
       <p className="eyebrow">Shop by category</p>
       <h1 className="mt-2 text-4xl font-black">{view.collection.title}</h1>
       {view.collection.description ? <p className="mt-3 max-w-3xl text-muted">{view.collection.description}</p> : null}
-      <p className="mt-2 text-sm text-muted">Checkout is handled on each Shopify product page or WhatsApp.</p>
+      <p className="mt-2 text-sm text-muted">Products sync from Shopify. WhatsApp ordering stays available if checkout is temporarily unavailable.</p>
       <div className="mt-8">
         <ProductGrid products={view.collection.products || []} />
       </div>

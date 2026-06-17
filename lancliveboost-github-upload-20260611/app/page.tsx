@@ -8,6 +8,8 @@ import PolicyLinks from "@/components/PolicyLinks";
 import TrustBadges from "@/components/TrustBadges";
 import WhatsAppCTA from "@/components/WhatsAppCTA";
 
+export const revalidate = 60;
+
 export default function HomePage() {
   return (
     <>

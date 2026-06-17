@@ -48,8 +48,17 @@ export default function ProductInfo({ product, isFallback = false }: { product: 
       </label>
 
       <div className="grid gap-3 sm:grid-cols-3">
-        <BuyNowButton product={{ title: product.title, handle: product.handle, price: variant?.price || product.priceRange.minVariantPrice, shopifyProductUrl: product.shopifyProductUrl }} />
-        <BuyNowButton label="Checkout" className="button button-primary" product={{ title: product.title, handle: product.handle, price: variant?.price || product.priceRange.minVariantPrice, shopifyProductUrl: product.shopifyProductUrl }} />
+        <BuyNowButton
+          product={{ title: product.title, handle: product.handle, price: variant?.price || product.priceRange.minVariantPrice, variantId, shopifyProductUrl: product.shopifyProductUrl }}
+          quantity={quantity}
+        />
+        <BuyNowButton
+          label="Checkout"
+          className="button button-primary"
+          checkout
+          product={{ title: product.title, handle: product.handle, price: variant?.price || product.priceRange.minVariantPrice, variantId, shopifyProductUrl: product.shopifyProductUrl }}
+          quantity={quantity}
+        />
         <WhatsAppButton product={{ title: product.title, handle: product.handle, price: variant?.price || product.priceRange.minVariantPrice }} />
       </div>
 

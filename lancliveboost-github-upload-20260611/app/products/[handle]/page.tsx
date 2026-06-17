@@ -3,8 +3,8 @@ import { notFound } from "next/navigation";
 import ProductGallery from "@/components/ProductGallery";
 import ProductGrid from "@/components/ProductGrid";
 import ProductInfo from "@/components/ProductInfo";
-import { getFallbackProduct } from "@/lib/fallback-catalog";
 import { createMetadata } from "@/lib/seo";
+import { getProductByHandle } from "@/lib/shopify/client";
 
 type Props = {
   params: Promise<{ handle: string }>;
@@ -12,7 +12,7 @@ type Props = {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { handle } = await params;
-  const view = getFallbackProduct(handle);
+  const view = await getProductByHandle(handle);
   const product = view?.product;
   if (!product) return createMetadata({ title: "Product" });
   const image = product.featuredImage?.url;
@@ -24,16 +24,18 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   });
 }
 
+export const revalidate = 60;
+
 export default async function ProductPage({ params }: Props) {
   const { handle } = await params;
-  const view = getFallbackProduct(handle);
+  const view = await getProductByHandle(handle);
   if (!view?.product) notFound();
 
   return (
     <div className="container py-10">
       <div className="grid gap-8 lg:grid-cols-2">
         <ProductGallery product={view.product} />
-        <ProductInfo product={view.product} isFallback />
+        <ProductInfo product={view.product} isFallback={view.product.id.startsWith("fallback-")} />
       </div>
       <section className="section-pad">
         <h2 className="text-3xl font-black">Related products</h2>

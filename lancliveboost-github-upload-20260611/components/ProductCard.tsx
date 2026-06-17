@@ -48,7 +48,7 @@ export default function ProductCard({ product }: Props) {
           </div>
         </div>
         <div className="grid gap-2">
-          <BuyNowButton product={{ title: product.title, handle: product.handle, price, shopifyProductUrl: product.shopifyProductUrl }} />
+          <BuyNowButton product={{ title: product.title, handle: product.handle, price, variantId: product.variants[0]?.id, shopifyProductUrl: product.shopifyProductUrl }} />
           <WhatsAppButton product={{ title: product.title, handle: product.handle, price }} />
         </div>
       </div>

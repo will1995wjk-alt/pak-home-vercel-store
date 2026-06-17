@@ -23,18 +23,19 @@ Important values:
 1. `NEXT_PUBLIC_SITE_URL`
 2. `NEXT_PUBLIC_SITE_NAME`
 3. `NEXT_PUBLIC_WHATSAPP_NUMBER`
-4. `NEXT_PUBLIC_SHOPIFY_STORE_URL`
+4. `SHOPIFY_STORE_DOMAIN`
+5. `SHOPIFY_STOREFRONT_ACCESS_TOKEN`
 5. `NEXT_PUBLIC_SUPPORT_EMAIL`
 6. `NEXT_PUBLIC_SUPPORT_PHONE`
 
-Use the Vercel generated URL for `NEXT_PUBLIC_SITE_URL` at first. After binding a custom domain, update this value. `NEXT_PUBLIC_SHOPIFY_STORE_URL` is optional; when it is empty, product purchase buttons fall back to WhatsApp.
+Use the Vercel generated URL for `NEXT_PUBLIC_SITE_URL` at first. After binding a custom domain, update this value. `NEXT_PUBLIC_SHOPIFY_STORE_URL` is optional and only used for temporary product-page fallback links.
 
 ## Deploy
 
 1. Click Deploy.
 2. Wait for the build to finish.
 3. Open the generated `vercel.app` preview domain.
-4. Test homepage, product page, local cart notice page, Shopify product-page links, search, and WhatsApp.
+4. Test homepage, collections, product page, Add to Cart, cart quantity updates, Shopify checkoutUrl redirect, search, and WhatsApp.
 
 ## Bind custom domain later
 

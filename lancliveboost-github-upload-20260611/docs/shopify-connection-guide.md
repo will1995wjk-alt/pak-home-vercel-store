@@ -1,6 +1,8 @@
 # Shopify Connection Guide
 
-This guide explains how to connect the Vercel / Next.js storefront to Shopify so Shopify becomes the source of truth for products, collections, cart, checkout, orders, payments, and shipping.
+This guide explains how to connect the Vercel / Next.js storefront to Shopify Headless so Shopify becomes the source of truth for products, collections, cart, checkout, orders, payments, and shipping.
+
+The current storefront primary mode is Shopify Headless Storefront API. Temporary Shopify product-page links are retained only as a fallback when the Storefront API or checkout is unavailable.
 
 ## 1. Create a Storefront API token
 
@@ -44,16 +46,16 @@ The frontend `/collections` page reads Shopify collections. The `/collections/[h
 
 In Vercel, open the project and go to Settings > Environment Variables.
 
-Add these values:
+Add these Production values:
 
 ```env
-SHOPIFY_STORE_DOMAIN=your-shopify-store.myshopify.com
+SHOPIFY_STORE_DOMAIN=hjbcjw-h3.myshopify.com
 SHOPIFY_STOREFRONT_ACCESS_TOKEN=your-storefront-api-token
 NEXT_PUBLIC_SITE_URL=https://pakfamilypro.com
 NEXT_PUBLIC_SITE_NAME=Pak Family Pro
-NEXT_PUBLIC_WHATSAPP_NUMBER=your-whatsapp-number
-NEXT_PUBLIC_SUPPORT_EMAIL=your-support-email
-NEXT_PUBLIC_SUPPORT_PHONE=your-support-phone
+NEXT_PUBLIC_WHATSAPP_NUMBER=923199815828
+NEXT_PUBLIC_SUPPORT_EMAIL=will1995wjk@gmial.com
+NEXT_PUBLIC_SUPPORT_PHONE=92 3199815828
 ```
 
 Important:
@@ -62,6 +64,7 @@ Important:
 - `SHOPIFY_STOREFRONT_ACCESS_TOKEN` must stay private and must not be committed to GitHub.
 - Public values start with `NEXT_PUBLIC_` because they are safe for browser use.
 - After changing environment variables, redeploy the Vercel project. Vercel only applies new environment variables to new deployments.
+- Do not rely on `NEXT_PUBLIC_SHOPIFY_STORE_URL` for live catalog data. It is only a temporary product-page fallback.
 
 ## 5. Test product sync
 
@@ -71,7 +74,7 @@ Important:
 4. Wait about 60 seconds.
 5. Open the frontend homepage, `/collections`, the matching collection page, and the product page.
 
-The storefront uses short revalidation instead of permanent static caching, so Shopify product changes should appear after the revalidation window without editing frontend code.
+The storefront uses short revalidation instead of permanent static caching. Homepage, collection, product, and search data use a 60 second revalidation window, so Shopify product changes should appear after roughly one minute without editing frontend code.
 
 ## 6. Test search
 
@@ -92,6 +95,7 @@ If Shopify is not connected or the API fails, the page falls back to demo produc
 Add to Cart uses the Shopify Product Variant ID, not the Product ID.
 
 If Shopify is not connected, the button shows: `Shopify checkout is not connected yet.`
+If Shopify checkout cannot be reached, the user sees: `Shopify checkout is temporarily unavailable. Please order on WhatsApp.`
 
 ## 8. Test Shopify Checkout
 
@@ -110,3 +114,16 @@ The frontend must not manually build the checkout URL.
 3. Confirm the order appears with customer, product, payment, shipping, and fulfillment information.
 
 Payments, delivery methods, Cash on Delivery, and shipping rates are configured in Shopify Admin, not in the frontend code.
+
+## 10. If products do not display
+
+Check these items in order:
+
+1. `SHOPIFY_STORE_DOMAIN` is only `hjbcjw-h3.myshopify.com`, without `https://`.
+2. `SHOPIFY_STOREFRONT_ACCESS_TOKEN` is present in Vercel Production variables.
+3. The product is Active.
+4. The product has a price, inventory, image, and available variant.
+5. The product is assigned to a Collection.
+6. The product and collection are published to the sales channel exposed to Storefront API.
+7. The collection handle matches the URL you are testing.
+8. Vercel has redeployed after environment variable changes.

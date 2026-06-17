@@ -38,6 +38,31 @@ export function getFallbackCollection(handle: string) {
   };
 }
 
+export function getFallbackCollections() {
+  return {
+    pageInfo: emptyPageInfo,
+    nodes: categories.map((category) => ({
+      id: `fallback-collection-${category.handle}`,
+      handle: category.handle,
+      title: category.title,
+      description: category.description,
+      image: {
+        url: category.image,
+        altText: category.title,
+        width: 900,
+        height: 650
+      }
+    })) as Collection[]
+  };
+}
+
+export function getFallbackProducts(first = 12) {
+  return {
+    products: fallbackProducts.slice(0, first),
+    pageInfo: emptyPageInfo
+  };
+}
+
 export function getFallbackProduct(handle: string) {
   const product = fallbackProducts.find((item) => item.handle === handle);
   if (!product) return null;

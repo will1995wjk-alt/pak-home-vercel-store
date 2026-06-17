@@ -1,8 +1,9 @@
 import ProductGrid from "@/components/ProductGrid";
-import { emptyPageInfo, searchFallbackProducts } from "@/lib/fallback-catalog";
 import { createMetadata } from "@/lib/seo";
+import { searchProducts } from "@/lib/shopify/client";
 
 export const metadata = createMetadata({ title: "Search", description: "Search home appliances and daily essentials in Pakistan.", path: "/search" });
+export const revalidate = 60;
 
 type Props = {
   searchParams: Promise<{ q?: string; after?: string }>;
@@ -11,11 +12,7 @@ type Props = {
 export default async function SearchPage({ searchParams }: Props) {
   const { q = "" } = await searchParams;
   const query = q.trim();
-  const fallbackProducts = query ? searchFallbackProducts(query) : searchFallbackProducts("");
-  const result = {
-    products: fallbackProducts,
-    pageInfo: emptyPageInfo
-  };
+  const result = await searchProducts(query, { first: 24 });
 
   return (
     <div className="container py-10">
@@ -30,7 +27,7 @@ export default async function SearchPage({ searchParams }: Props) {
         {query ? (
           <>
             <p className="mb-4 text-muted">
-              Results for &quot;{query}&quot; from the local catalog
+              Results for &quot;{query}&quot;
             </p>
             <ProductGrid products={result.products} />
             {result.pageInfo.hasNextPage && result.pageInfo.endCursor ? (

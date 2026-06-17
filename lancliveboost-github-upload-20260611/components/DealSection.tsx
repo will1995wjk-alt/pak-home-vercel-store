@@ -1,8 +1,10 @@
-import { fallbackProducts } from "@/data/fallback-products";
+import { getProducts } from "@/lib/shopify/client";
+import { isDiscounted } from "@/lib/shopify/utils";
 import ProductGrid from "./ProductGrid";
 
-export default function DealSection() {
-  const products = fallbackProducts.filter((product) => product.tags.includes("deal")).slice(0, 4);
+export default async function DealSection() {
+  const { products: catalog } = await getProducts({ first: 16 });
+  const products = catalog.filter((product) => isDiscounted(product) || product.tags.some((tag) => ["deal", "hot-deals"].includes(tag))).slice(0, 4);
 
   return (
     <section className="bg-navy py-14 text-white">
