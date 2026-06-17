@@ -25,6 +25,7 @@ import {
 
 const API_VERSION = "2026-04";
 const SHOPIFY_REVALIDATE_SECONDS = 60;
+const SHOPIFY_DEBUG_PREFIX = "[shopify-storefront]";
 
 type ShopifyResponse<T> = {
   data?: T;
@@ -40,6 +41,18 @@ type ShopifyFetchOptions = {
   cache?: RequestCache;
   revalidate?: number;
 };
+
+function safeErrorMessage(error: unknown) {
+  return error instanceof Error ? error.message : "Unknown Shopify error";
+}
+
+export function logShopifyDebug(event: string, details: Record<string, string | number | boolean | null | undefined>) {
+  console.info(SHOPIFY_DEBUG_PREFIX, event, details);
+}
+
+function logShopifyWarning(event: string, details: Record<string, string | number | boolean | null | undefined>) {
+  console.warn(SHOPIFY_DEBUG_PREFIX, event, details);
+}
 
 export async function fetchShopify<T>(
   query: string,
@@ -113,8 +126,14 @@ export async function getProducts({ first = 12, after, query }: { first?: number
       { revalidate: SHOPIFY_REVALIDATE_SECONDS }
     );
     const products = unwrapProducts(data.products.nodes);
-    return products.length ? { products, pageInfo: data.products.pageInfo } : getFallbackProducts(first);
-  } catch {
+    if (products.length) {
+      logShopifyDebug("products.loaded", { count: products.length, query: query || null });
+      return { products, pageInfo: data.products.pageInfo };
+    }
+    logShopifyWarning("products.empty_fallback", { query: query || null, first });
+    return getFallbackProducts(first);
+  } catch (error) {
+    logShopifyWarning("products.error_fallback", { query: query || null, first, error: safeErrorMessage(error) });
     return getFallbackProducts(first);
   }
 }
@@ -144,8 +163,14 @@ export async function getCollections({ first = 20, after }: { first?: number; af
       { first, after },
       { revalidate: SHOPIFY_REVALIDATE_SECONDS }
     );
-    return data.collections.nodes.length ? data.collections : getFallbackCollections();
-  } catch {
+    if (data.collections.nodes.length) {
+      logShopifyDebug("collections.loaded", { count: data.collections.nodes.length });
+      return data.collections;
+    }
+    logShopifyWarning("collections.empty_fallback", { first });
+    return getFallbackCollections();
+  } catch (error) {
+    logShopifyWarning("collections.error_fallback", { first, error: safeErrorMessage(error) });
     return getFallbackCollections();
   }
 }
@@ -157,8 +182,12 @@ export async function getCollectionByHandle(handle: string, { first = 24, after 
       { handle, first, after },
       { revalidate: SHOPIFY_REVALIDATE_SECONDS }
     );
-    if (!data.collectionByHandle) return getFallbackCollection(handle);
+    if (!data.collectionByHandle) {
+      logShopifyWarning("collection.missing_fallback", { handle });
+      return getFallbackCollection(handle);
+    }
     const products = unwrapProducts(data.collectionByHandle.products.nodes);
+    logShopifyDebug("collection.loaded", { handle, productCount: products.length });
     return {
       collection: {
         ...data.collectionByHandle,
@@ -166,7 +195,8 @@ export async function getCollectionByHandle(handle: string, { first = 24, after 
       } as Collection,
       pageInfo: data.collectionByHandle.products.pageInfo as PageInfo
     };
-  } catch {
+  } catch (error) {
+    logShopifyWarning("collection.error_fallback", { handle, error: safeErrorMessage(error) });
     return getFallbackCollection(handle);
   }
 }
