@@ -57,13 +57,13 @@ img {
 }
 
 .button-primary {
-  background: #1f5da8;
+  background: #ff7a1a;
   color: #fff;
-  box-shadow: 0 8px 22px rgba(31, 93, 168, 0.24);
+  box-shadow: 0 8px 22px rgba(255, 122, 26, 0.28);
 }
 
 .button-primary:hover {
-  background: #164a8b;
+  background: #e8660c;
 }
 
 .button-secondary {
@@ -73,8 +73,8 @@ img {
 }
 
 .button-secondary:hover {
-  border-color: #1f5da8;
-  color: #164a8b;
+  border-color: #ff7a1a;
+  color: #e8660c;
 }
 
 .button-whatsapp {
@@ -100,8 +100,8 @@ img {
 }
 
 .field:focus {
-  border-color: #1f5da8;
-  box-shadow: 0 0 0 3px rgba(31, 93, 168, 0.16);
+  border-color: #ff7a1a;
+  box-shadow: 0 0 0 3px rgba(255, 122, 26, 0.16);
 }
 
 .section-pad {
@@ -122,7 +122,7 @@ img {
   font-weight: 800;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: #164a8b;
+  color: #e8660c;
 }
 
 @keyframes marquee {

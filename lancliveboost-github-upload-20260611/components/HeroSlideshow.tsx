@@ -29,7 +29,7 @@ export default function HeroSlideshow() {
   }, []);
 
   return (
-    <div className="relative aspect-[4/3] w-full overflow-hidden rounded-xl border border-white/10 shadow-lift">
+    <div className="relative aspect-[4/3] w-full overflow-hidden rounded-xl border border-line shadow-lift">
       {slides.map((slide, index) => (
         <Image
           key={slide.src}

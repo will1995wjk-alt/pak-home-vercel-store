@@ -17,7 +17,7 @@ const links = [
 
 export default function Header() {
   return (
-    <header className="sticky top-0 z-40 border-b border-black/30 bg-navy text-white shadow-card">
+    <header className="sticky top-0 z-40 border-b border-line bg-white/95 text-ink shadow-card backdrop-blur">
       <div className="container flex min-h-16 items-center gap-3 py-2 sm:gap-4">
         <Link href="/" className="flex shrink-0 items-center" aria-label={`${siteConfig.name} home`}>
           <img
@@ -31,7 +31,7 @@ export default function Header() {
           <SearchBar />
         </div>
 
-        <Link className="button button-secondary gap-2" href="/cart" aria-label="Cart">
+        <Link className="button button-primary gap-2" href="/cart" aria-label="Cart">
           <CartIcon className="h-5 w-5" />
           <span className="hidden sm:inline">Cart</span>
         </Link>
@@ -43,12 +43,12 @@ export default function Header() {
         <SearchBar />
       </div>
 
-      <nav className="border-t border-white/10 bg-navy">
+      <nav className="border-t border-line bg-white">
         <div className="container flex items-center gap-1 overflow-x-auto py-1.5 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {links.map((link) => (
             <Link
               key={link.href}
-              className="whitespace-nowrap rounded-lg px-3 py-2 text-sm font-bold text-white/85 hover:bg-white/10 hover:text-accent"
+              className="whitespace-nowrap rounded-lg bg-brand px-3 py-2 text-sm font-bold text-white shadow-sm hover:bg-brand-dark"
               href={link.href}
             >
               {link.label}
