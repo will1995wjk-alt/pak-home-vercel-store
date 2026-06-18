@@ -17,7 +17,7 @@ const links = [
 
 export default function Header() {
   return (
-    <header className="sticky top-0 z-40 border-b border-line bg-white/95 text-ink backdrop-blur">
+    <header className="sticky top-0 z-40 border-b border-black/30 bg-navy text-white shadow-card">
       <div className="container flex min-h-16 items-center gap-3 py-2 sm:gap-4">
         <Link href="/" className="flex shrink-0 items-center" aria-label={`${siteConfig.name} home`}>
           <img
@@ -43,12 +43,12 @@ export default function Header() {
         <SearchBar />
       </div>
 
-      <nav className="border-t border-line bg-white">
+      <nav className="border-t border-white/10 bg-navy">
         <div className="container flex items-center gap-1 overflow-x-auto py-1.5 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {links.map((link) => (
             <Link
               key={link.href}
-              className="whitespace-nowrap rounded-lg px-3 py-2 text-sm font-bold text-ink hover:bg-paper hover:text-brand"
+              className="whitespace-nowrap rounded-lg px-3 py-2 text-sm font-bold text-white/85 hover:bg-white/10 hover:text-accent"
               href={link.href}
             >
               {link.label}

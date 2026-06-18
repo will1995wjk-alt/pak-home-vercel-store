@@ -17,8 +17,8 @@ html {
 
 body {
   margin: 0;
-  background: #f3faf6;
-  color: #13201f;
+  background: #f4f6f8;
+  color: #20242a;
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
 }
@@ -57,40 +57,40 @@ img {
 }
 
 .button-primary {
-  background: #008c7a;
+  background: #1f5da8;
   color: #fff;
-  box-shadow: 0 8px 22px rgba(0, 140, 122, 0.24);
+  box-shadow: 0 8px 22px rgba(31, 93, 168, 0.24);
 }
 
 .button-primary:hover {
-  background: #006f61;
+  background: #164a8b;
 }
 
 .button-secondary {
-  border: 1px solid #d7e5df;
+  border: 1px solid #d9dde4;
   background: #fff;
-  color: #13201f;
+  color: #20242a;
 }
 
 .button-secondary:hover {
-  border-color: #008c7a;
-  color: #006f61;
+  border-color: #1f5da8;
+  color: #164a8b;
 }
 
 .button-whatsapp {
-  background: #1fc46b;
-  color: #062a18;
-  box-shadow: 0 8px 22px rgba(31, 196, 107, 0.26);
+  background: #ff7a1a;
+  color: #fff;
+  box-shadow: 0 8px 22px rgba(255, 122, 26, 0.28);
 }
 
 .button-whatsapp:hover {
-  background: #19aa5c;
+  background: #e8660c;
 }
 
 .field {
   width: 100%;
   min-height: 46px;
-  border: 1px solid #d7e5df;
+  border: 1px solid #d9dde4;
   border-radius: 10px;
   background: #fff;
   padding: 0 14px;
@@ -100,8 +100,8 @@ img {
 }
 
 .field:focus {
-  border-color: #008c7a;
-  box-shadow: 0 0 0 3px rgba(0, 140, 122, 0.16);
+  border-color: #1f5da8;
+  box-shadow: 0 0 0 3px rgba(31, 93, 168, 0.16);
 }
 
 .section-pad {
@@ -109,7 +109,7 @@ img {
 }
 
 .card {
-  border: 1px solid #d7e5df;
+  border: 1px solid #d9dde4;
   border-radius: 14px;
   background: #fff;
 }
@@ -122,7 +122,7 @@ img {
   font-weight: 800;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: #006f61;
+  color: #164a8b;
 }
 
 @keyframes marquee {

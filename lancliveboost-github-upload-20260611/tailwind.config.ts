@@ -5,21 +5,21 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        ink: "#13201f",
-        muted: "#60706d",
-        line: "#d7e5df",
-        paper: "#f3faf6",
-        brand: "#008c7a",
-        "brand-dark": "#006f61",
-        navy: "#173d38",
-        "navy-light": "#23514b",
-        accent: "#ff7a45",
-        whatsapp: "#1fc46b"
+        ink: "#20242a",
+        muted: "#656b76",
+        line: "#d9dde4",
+        paper: "#f4f6f8",
+        brand: "#1f5da8",
+        "brand-dark": "#164a8b",
+        navy: "#242424",
+        "navy-light": "#343434",
+        accent: "#ff7a1a",
+        whatsapp: "#ff7a1a"
       },
       boxShadow: {
-        soft: "0 14px 40px rgba(19, 32, 31, 0.1)",
-        card: "0 2px 10px rgba(19, 32, 31, 0.07)",
-        lift: "0 20px 50px rgba(0, 140, 122, 0.16)"
+        soft: "0 14px 40px rgba(32, 36, 42, 0.12)",
+        card: "0 2px 10px rgba(32, 36, 42, 0.08)",
+        lift: "0 20px 50px rgba(31, 93, 168, 0.18)"
       },
       borderRadius: {
         xl: "14px"
