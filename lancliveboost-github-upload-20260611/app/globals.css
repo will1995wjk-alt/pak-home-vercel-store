@@ -137,3 +137,51 @@ img {
 .animate-marquee {
   animation: marquee 22s linear infinite;
 }
+
+.product-carousel {
+  --product-carousel-gap: 16px;
+  --product-carousel-item-width: calc((min(1200px, calc(100vw - 32px)) - (var(--product-carousel-gap) * 4)) / 5);
+  overflow: hidden;
+}
+
+.product-carousel-track {
+  display: flex;
+  gap: var(--product-carousel-gap);
+  width: max-content;
+  animation: product-carousel-scroll 42s linear infinite;
+}
+
+.product-carousel:hover .product-carousel-track {
+  animation-play-state: paused;
+}
+
+.product-carousel-group {
+  display: flex;
+  gap: var(--product-carousel-gap);
+}
+
+.product-carousel-item {
+  flex: 0 0 var(--product-carousel-item-width);
+  width: var(--product-carousel-item-width);
+}
+
+@keyframes product-carousel-scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(calc(-50% - (var(--product-carousel-gap) / 2)));
+  }
+}
+
+@media (max-width: 1023px) {
+  .product-carousel {
+    --product-carousel-item-width: calc((100vw - 64px) / 3);
+  }
+}
+
+@media (max-width: 639px) {
+  .product-carousel {
+    --product-carousel-item-width: calc((100vw - 48px) / 2);
+  }
+}

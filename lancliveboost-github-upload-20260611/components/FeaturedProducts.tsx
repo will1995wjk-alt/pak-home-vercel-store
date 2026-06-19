@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { getCollectionByHandle, logShopifyDebug } from "@/lib/shopify/client";
 import { ArrowIcon } from "./Icons";
-import ProductGrid from "./ProductGrid";
+import FeaturedProductCarousel from "./FeaturedProductCarousel";
 
 const HOMEPAGE_FEATURED_COLLECTION_HANDLE = "homepage-featured";
 
@@ -29,7 +29,7 @@ export default async function FeaturedProducts() {
           </Link>
         </div>
         <div className="mt-8">
-          <ProductGrid products={products} />
+          <FeaturedProductCarousel products={products} />
         </div>
       </div>
     </section>
