@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { policyLinks } from "@/data/homepage";
+import { policyLinks, trustBadges } from "@/data/homepage";
 import { ArrowIcon } from "./Icons";
 
 export default function PolicyLinks() {
@@ -10,7 +10,16 @@ export default function PolicyLinks() {
           <p className="eyebrow justify-center">Helpful information</p>
           <h2 className="mt-2 text-3xl font-black md:text-4xl">Policies &amp; Support</h2>
         </div>
-        <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {trustBadges.map((badge) => (
+            <div
+              key={badge.title}
+              className="flex flex-col rounded-xl border border-line p-5 transition hover:border-brand hover:shadow-card"
+            >
+              <h3 className="font-black">{badge.title}</h3>
+              <p className="mt-2 flex-1 text-sm text-muted">{badge.text}</p>
+            </div>
+          ))}
           {policyLinks.map((link) => (
             <Link
               key={link.href}

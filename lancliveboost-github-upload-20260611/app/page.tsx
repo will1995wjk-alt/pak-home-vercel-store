@@ -5,7 +5,6 @@ import FeaturedProducts from "@/components/FeaturedProducts";
 import HomeBuyingGuide from "@/components/HomeBuyingGuide";
 import HeroBanner from "@/components/HeroBanner";
 import PolicyLinks from "@/components/PolicyLinks";
-import TrustBadges from "@/components/TrustBadges";
 import WhatsAppCTA from "@/components/WhatsAppCTA";
 
 export const revalidate = 60;
@@ -15,7 +14,6 @@ export default function HomePage() {
     <>
       <HeroBanner />
       <CustomerSurveyPrompt />
-      <TrustBadges />
       <FeaturedCategories />
       <HomeBuyingGuide />
       <FeaturedProducts />
