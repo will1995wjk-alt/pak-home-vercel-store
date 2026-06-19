@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Link from "next/link";
 import { categories } from "@/data/homepage";
 import { ArrowIcon } from "./Icons";
@@ -17,30 +16,15 @@ export default function FeaturedCategories() {
             <ArrowIcon className="h-4 w-4" />
           </Link>
         </div>
-        <div className="mt-8 grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-5">
+        <div className="mt-6 flex flex-wrap gap-3">
           {categories.map((category) => (
             <Link
               key={category.handle}
               href={`/collections/${category.handle}`}
-              className="card group overflow-hidden shadow-card transition hover:-translate-y-1 hover:shadow-soft"
+              className="group inline-flex min-h-12 items-center justify-center gap-2 rounded-lg bg-brand px-5 py-3 text-sm font-black text-white shadow-card transition hover:-translate-y-1 hover:bg-brand-dark hover:shadow-soft md:text-base"
             >
-              <div className="overflow-hidden bg-paper">
-                <Image
-                  src={category.image}
-                  alt={category.title}
-                  width={700}
-                  height={520}
-                  className="aspect-[4/3] w-full object-cover transition duration-300 group-hover:scale-105"
-                />
-              </div>
-              <div className="p-4">
-                <h3 className="font-black leading-tight">{category.title}</h3>
-                <p className="mt-1 text-sm text-muted">{category.description}</p>
-                <span className="mt-3 inline-flex items-center gap-1 text-sm font-bold text-brand">
-                  Shop now
-                  <ArrowIcon className="h-4 w-4" />
-                </span>
-              </div>
+              {category.title}
+              <ArrowIcon className="h-4 w-4 transition group-hover:translate-x-0.5" />
             </Link>
           ))}
         </div>
