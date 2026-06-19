@@ -15,10 +15,10 @@ export default function HomePage() {
       <HeroBanner />
       <CustomerSurveyPrompt />
       <FeaturedCategories />
-      <HomeBuyingGuide />
       <FeaturedProducts />
       <DealSection />
       <WhatsAppCTA />
+      <HomeBuyingGuide />
       <PolicyLinks />
     </>
   );
