@@ -48,7 +48,7 @@ export default function Header() {
           {links.map((link) => (
             <Link
               key={link.href}
-              className="whitespace-nowrap rounded-lg bg-brand px-3 py-2 text-sm font-bold text-white shadow-sm hover:bg-brand-dark"
+              className="whitespace-nowrap rounded-lg px-3 py-2 text-sm font-bold text-brand hover:bg-brand/10 hover:text-brand-dark"
               href={link.href}
             >
               {link.label}

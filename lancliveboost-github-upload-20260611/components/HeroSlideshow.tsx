@@ -29,21 +29,23 @@ export default function HeroSlideshow() {
   }, []);
 
   return (
-    <div className="relative aspect-[4/3] w-full overflow-hidden rounded-xl border border-line shadow-lift">
+    <div className="absolute inset-0">
       {slides.map((slide, index) => (
         <Image
           key={slide.src}
           src={slide.src}
-          alt={slide.alt}
+          alt=""
           fill
-          sizes="(min-width: 1024px) 50vw, 100vw"
+          sizes="100vw"
           priority={index === 0}
-          className={`object-cover transition-opacity duration-1000 ease-in-out ${
+          className={`object-cover object-right transition-opacity duration-1000 ease-in-out ${
             index === active ? "opacity-100" : "opacity-0"
           }`}
         />
       ))}
-      <div className="absolute bottom-3 left-1/2 z-10 flex -translate-x-1/2 gap-2">
+      <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(255,255,255,0.98)_0%,rgba(255,255,255,0.94)_42%,rgba(255,255,255,0.74)_68%,rgba(255,255,255,0.42)_100%)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_82%_18%,rgba(20,87,217,0.18),transparent_32%)]" />
+      <div className="absolute bottom-5 left-1/2 z-10 flex -translate-x-1/2 gap-2 lg:left-auto lg:right-10 lg:translate-x-0">
         {slides.map((slide, index) => (
           <button
             key={slide.src}
@@ -52,7 +54,7 @@ export default function HeroSlideshow() {
             aria-current={index === active}
             onClick={() => setActive(index)}
             className={`h-2 rounded-full transition-all ${
-              index === active ? "w-6 bg-white" : "w-2 bg-white/50 hover:bg-white/80"
+              index === active ? "w-6 bg-brand" : "w-2 bg-brand/30 hover:bg-brand/60"
             }`}
           />
         ))}

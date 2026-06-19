@@ -11,14 +11,15 @@ const highlights = [
 
 export default function HeroBanner() {
   return (
-    <section className="bg-white text-ink">
-      <div className="container grid items-center gap-10 py-12 lg:grid-cols-2 lg:py-20">
-        <div>
-          <p className="inline-flex items-center gap-2 rounded-full border border-orange-100 bg-orange-50 px-4 py-2 text-sm font-bold text-brand-dark">
-            <span className="h-2 w-2 rounded-full bg-brand" />
+    <section className="relative isolate overflow-hidden bg-white text-ink">
+      <HeroSlideshow />
+      <div className="container relative z-10 flex min-h-[620px] items-center py-14 lg:py-20">
+        <div className="max-w-3xl">
+          <p className="inline-flex items-center gap-2 rounded-full border border-brand/20 bg-white/90 px-4 py-2 text-sm font-bold text-brand-dark shadow-card backdrop-blur">
+            <span className="h-2 w-2 rounded-full bg-accent" />
             COD available across Pakistan
           </p>
-          <h1 className="mt-5 text-balance text-4xl font-black leading-tight md:text-5xl lg:text-6xl">
+          <h1 className="mt-5 max-w-3xl text-balance text-4xl font-black leading-tight md:text-5xl lg:text-6xl">
             Affordable Home Appliances &amp; Daily Essentials in Pakistan
           </h1>
           <p className="mt-5 max-w-xl text-pretty text-lg leading-relaxed text-muted">
@@ -34,21 +35,11 @@ export default function HeroBanner() {
           </div>
           <div className="mt-8 flex flex-wrap gap-x-6 gap-y-3">
             {highlights.map((item) => (
-              <div key={item.label} className="flex items-center gap-2 text-sm font-bold text-ink">
+              <div key={item.label} className="flex items-center gap-2 rounded-full border border-line bg-white/80 px-4 py-2 text-sm font-bold text-ink shadow-card backdrop-blur">
                 <item.icon className="h-5 w-5 text-brand" />
                 {item.label}
               </div>
             ))}
-          </div>
-        </div>
-        <div className="relative">
-          <HeroSlideshow />
-          <div className="absolute -bottom-4 left-4 right-4 flex items-center justify-between gap-3 rounded-xl border border-line bg-white p-4 text-ink shadow-lift md:left-6 md:right-auto md:w-72">
-            <div>
-              <p className="text-xs font-bold uppercase tracking-wide text-brand">Easy Returns</p>
-              <p className="text-sm font-bold leading-tight">On damaged or wrong items</p>
-            </div>
-            <ShieldIcon className="h-9 w-9 text-brand" />
           </div>
         </div>
       </div>
