@@ -21,7 +21,7 @@ export default function FeaturedCategories() {
             <Link
               key={category.handle}
               href={`/collections/${category.handle}`}
-              className="group inline-flex min-h-12 items-center justify-center gap-2 rounded-lg bg-brand/20 px-5 py-3 text-sm font-black text-white shadow-card transition hover:-translate-y-1 hover:bg-brand-dark/20 hover:shadow-soft md:text-base"
+              className="group inline-flex min-h-12 items-center justify-center gap-2 rounded-lg bg-brand/80 px-5 py-3 text-sm font-black text-white shadow-card transition hover:-translate-y-1 hover:bg-brand-dark/80 hover:shadow-soft md:text-base"
             >
               {category.title}
               <ArrowIcon className="h-4 w-4 transition group-hover:translate-x-0.5" />
